@@ -15,7 +15,6 @@ import Hourschedule from "./pages/Hourschedule.jsx";
 import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 
 
 function App() {
