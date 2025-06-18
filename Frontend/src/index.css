@@ -1,0 +1,99 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:ital,wght@0,100;1,500&display=swap'); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Underline animation */
+.underline-active span {
+  left: 0 !important;
+  width: 100% !important;
+}
+
+/* Bold effect on images */
+.image-active img {
+  transform: scale(1.05);
+}
+
+.about-section {
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+
+.text-content {
+  flex: 1;
+}
+
+.text-content h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.text-content p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.image-content {
+  flex: 1;
+}
+
+.image-content img {
+  width: 100%;
+  border-radius: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.image-content img.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Underline animation for heading */
+.underline-animation {
+  position: relative;
+  display: inline-block;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.underline-animation::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 3px;
+  background-color: #2563eb;
+  transition: width 0.4s ease;
+}
+
+.underline-animation.in-view::after {
+  width: 100%;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .image-content {
+    order: 2;
+  }
+
+  .text-content {
+    order: 1;
+  }
+}
