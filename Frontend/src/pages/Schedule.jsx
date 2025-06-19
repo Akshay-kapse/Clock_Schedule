@@ -42,7 +42,7 @@ function Schedule() {
     setError(null);
     try {
       const response = await axios.get(
-        "http://192.168.31.150:4001/api/schedule/fetch",
+        `${import.meta.env.VITE_API_BASE_URL}/api/schedule/fetch`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -118,7 +118,7 @@ function Schedule() {
       }
 
       const response = await axios.post(
-        "http://192.168.31.150:4001/api/schedule/schedule/",
+        `${import.meta.env.VITE_API_BASE_URL}/api/schedule/schedule/`,
         {
           text: newTask,
           startTime: start.toISOString(),
@@ -161,7 +161,7 @@ function Schedule() {
       );
 
       await axios.put(
-        `http://192.168.31.150:4001/api/schedule/schedule/${taskId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/schedule/schedule/${taskId}`,
         { completed: updatedCompletionStatus },
         {
           headers: {
@@ -180,7 +180,7 @@ function Schedule() {
   const scheduleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://192.168.31.150:4001/api/schedule/delete/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/schedule/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("jwt")}`,

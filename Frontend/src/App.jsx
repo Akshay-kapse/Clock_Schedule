@@ -1,7 +1,8 @@
 import React from "react";
 import Navbar from "../src/components/Navbar.jsx";
 import Home from "../src/components/Home.jsx";
-import { Route, Routes, useLocation ,  Navigate} from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom"; 
 import Schedule from "../src/pages/Schedule.jsx";
 import Goals from "../src/pages/Goals.jsx";
 import About from "../src/pages/About.jsx";
@@ -53,7 +54,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/goalschedule/:goalId/day" element={<Dayschedule />} />
         <Route path="/goalschedule/:goalId/hour" element={<Hourschedule />} />
-        
+
       </Routes>
 
       <Toaster />

@@ -23,7 +23,7 @@ const Register = () => {
 
     try {
       const { data } = await axios.post(
-        "http://192.168.31.150:4001/api/user/register",
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/register`,
         payload,
         {
           withCredentials: true,

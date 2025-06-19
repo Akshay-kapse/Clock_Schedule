@@ -21,7 +21,7 @@ const VerifyCode = () => {
     try {
       console.log("Verifying code with email:", email, "and code:", code);  // Debug log
       const res = await axios.post(
-        "http://192.168.31.150:4001/api/userpassword/verify-code",
+        `${import.meta.env.VITE_API_BASE_URL}/api/userpassword/verify-code`,
         {
           email: email.trim(),
           code: code.trim(),

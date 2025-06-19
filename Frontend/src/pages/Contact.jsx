@@ -34,7 +34,7 @@ const ContactPage = () => {
 
     try {
       const response = await fetch(
-        "http://192.168.31.150:4001/api/contact/submit-contact",
+        `${import.meta.env.VITE_API_BASE_URL}/api/contact/submit-contact`,
         {
           method: "POST",
           headers: {

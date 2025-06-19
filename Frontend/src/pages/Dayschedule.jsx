@@ -50,7 +50,7 @@ function Schedule() {
     try {
       // setLoading(true); // Set loading true while fetching
       const response = await axios.get(
-        `http://192.168.31.150:4001/api/dayschedule/${goalId}/fetchschedule`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/fetchschedule`,
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
@@ -97,7 +97,7 @@ function Schedule() {
     try {
       setLoading(true);
       await axios.post(
-        `http://192.168.31.150:4001/api/dayschedule/${goalId}/schedule/`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/schedule/`,
         {
           text: newTask,
           startDate: new Date(startDate).toISOString(),
@@ -140,7 +140,7 @@ function Schedule() {
       );
 
       await axios.put(
-        `http://192.168.31.150:4001/api/dayschedule/${goalId}/updateschedule/${taskId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
         { completed: updatedCompletionStatus },
         { withCredentials: true }
       );
@@ -155,7 +155,7 @@ function Schedule() {
   const deleteTask = async (id) => {
     try {
       await axios.delete(
-        `http://192.168.31.150:4001/api/dayschedule/${goalId}/deleteschedule/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/deleteschedule/${id}`,
         { withCredentials: true }
       );
       toast.success("Schedule deleted successfully!");

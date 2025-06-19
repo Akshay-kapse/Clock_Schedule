@@ -35,7 +35,7 @@ const GoalPage = () => {
       setUser(decodedUser);
 
       const response = await axios.get(
-        "http://192.168.31.150:4001/api/goal/fetch",
+        `${import.meta.env.VITE_API_BASE_URL}/api/goal/fetch`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,14 +90,14 @@ const GoalPage = () => {
 
       if (isEditing) {
         await axios.put(
-          `http://192.168.31.150:4001/api/goal/update/${isEditing}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/goal/update/${isEditing}`,
           { goal, goalDate },
           { headers }
         );
         toast.success("Goal updated successfully!");
       } else {
         await axios.post(
-          "http://192.168.31.150:4001/api/goal/target",
+          `${import.meta.env.VITE_API_BASE_URL}/api/goal/target`,
           { goal, goalDate },
           { headers }
         );
@@ -127,7 +127,7 @@ const GoalPage = () => {
 
   const deleteGoal = async (id) => {
     try {
-      await axios.delete(`http://192.168.31.150:4001/api/goal/delete/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}1/api/goal/delete/${id}`);
       setGoalsList((prev) => prev.filter((g) => g._id !== id));
       toast.success("Goal deleted successfully!");
     } catch (err) {
