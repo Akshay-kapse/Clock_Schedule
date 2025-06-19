@@ -38,6 +38,7 @@ function App() {
 
       {/* defining routes */}
       <Routes>
+
          <Route exact path="/login" element={<Login />} />
          <Route path="/" element={<Navigate to="/home" />} />
         <Route exact path="/register" element={<Register />} />
@@ -52,6 +53,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/goalschedule/:goalId/day" element={<Dayschedule />} />
         <Route path="/goalschedule/:goalId/hour" element={<Hourschedule />} />
+        
       </Routes>
 
       <Toaster />
