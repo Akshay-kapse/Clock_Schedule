@@ -23,7 +23,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://right-con9ziqr7-akshays-projects-de964534.vercel.app", // ✅ CORRECT origin (no /home)
+      "https://right.vercel.app", 
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
