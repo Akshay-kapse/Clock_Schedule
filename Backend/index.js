@@ -23,7 +23,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://right.vercel.app", 
+      "https://right.vercel.app",
+       "https://right-xxxxx-akshays-projects-xxxxx.vercel.app" 
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
