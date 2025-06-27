@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
 import { Analytics } from "@vercel/analytics/react"; 
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/goalschedule/:goalId/day" element={<Dayschedule />} />
         <Route path="/goalschedule/:goalId/hour" element={<Hourschedule />} />
+        <Route path ="/privacypolicy" element={<PrivacyPolicy} />
 
       </Routes>
 
