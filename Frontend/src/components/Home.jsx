@@ -57,6 +57,7 @@ function Circle({ value, max, label, color }) {
   const strokeDashoffset = circumference * (1 - value / max);
 
   return (
+    
     <div className="flex flex-col items-center">
       <svg width="120" height="120" viewBox="0 0 100 100" className="mb-1">
         {/* Background Circle */}
@@ -105,5 +106,6 @@ function Circle({ value, max, label, color }) {
       </svg>
       <p className="text-xs tracking-wider uppercase text-gray-300">{label}</p>
     </div>
+    
   );
 }

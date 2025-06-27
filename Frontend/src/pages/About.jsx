@@ -4,6 +4,7 @@ import "aos/dist/aos.css";
 import HourglassImage from "../image/clock.jpg";
 import ScheduleImage from "../image/schedule.jpg";
 import TailwindImage from "../image/tailwind.jpg";
+import AdBanner from "../components/AdBanner";
 
 const AboutPage = () => {
   useEffect(() => {
@@ -16,9 +17,7 @@ const AboutPage = () => {
       <div className="flex flex-col md:flex-row md:items-center md:gap-8 mb-16">
         {/* Text Content */}
         <div data-aos="fade-up" className="md:w-1/2 order-2 md:order-1">
-          <h2
-            className="text-4xl font-bold text-blue-500 mb-6 relative inline-block group"
-          >
+          <h2 className="text-4xl font-bold text-blue-500 mb-6 relative inline-block group">
             About Us
             <span className="absolute bottom-[-6px] left-1/2 h-[4px] w-0 bg-blue-500 transition-all duration-500 group-hover:left-0 group-hover:w-full"></span>
           </h2>
@@ -54,11 +53,10 @@ const AboutPage = () => {
             className="rounded-lg shadow-lg w-full transition-all duration-300 ease-in-out group-hover:scale-105"
           />
         </div>
+
         {/* Text Content */}
         <div data-aos="fade-up" className="md:w-1/2">
-          <h2
-            className="text-4xl font-bold text-blue-500 mb-6 relative inline-block group"
-          >
+          <h2 className="text-4xl font-bold text-blue-500 mb-6 relative inline-block group">
             Our Project
             <span className="absolute bottom-[-6px] left-1/2 h-[4px] w-0 bg-blue-500 transition-all duration-500 group-hover:left-0 group-hover:w-full"></span>
           </h2>
@@ -72,7 +70,9 @@ const AboutPage = () => {
           </ul>
         </div>
       </div>
-
+      <div className="my-8">
+        <AdBanner />
+      </div>
       {/* Technologies Section */}
       <div className="text-center mt-16">
         <h2

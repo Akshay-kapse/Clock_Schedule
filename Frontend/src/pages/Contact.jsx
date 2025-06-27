@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Importing the required styles
+import "react-toastify/dist/ReactToastify.css"; 
+import AdBanner from "../components/AdBanner";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -94,7 +95,9 @@ const ContactPage = () => {
             </li>
           </ul>
         </div>
-
+<div className="my-8">
+  <AdBanner />
+</div>
         {/* Right Section - Form */}
         <div className="bg-blue-900 text-white mt-5 p-8 rounded-lg shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
