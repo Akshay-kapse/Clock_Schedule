@@ -16,6 +16,7 @@ import Hourschedule from "./pages/Hourschedule.jsx";
 import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
+import { Analytics } from "@vercel/analytics/react"; 
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
       </Routes>
 
       <Toaster />
+      <Analytics /> 
     </div>
   );
 }
