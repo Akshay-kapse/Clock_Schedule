@@ -56,7 +56,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/goalschedule/:goalId/day" element={<Dayschedule />} />
         <Route path="/goalschedule/:goalId/hour" element={<Hourschedule />} />
-        <Route path ="/privacypolicy" element={<PrivacyPolicy} />
+        <Route path ="/privacypolicy" element={<PrivacyPolicy />} />
 
       </Routes>
 
