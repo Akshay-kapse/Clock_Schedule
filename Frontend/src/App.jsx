@@ -19,7 +19,7 @@ import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
 
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
 
 
 function App() {
@@ -64,7 +64,7 @@ function App() {
 
       <Toaster />
 
-      <Analytics />
+      {/* <Analytics /> */}
 
     </div>
   );

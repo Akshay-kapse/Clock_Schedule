@@ -187,7 +187,7 @@ const Navbar = () => {
   );
 };
 
-// export default Navbar;
+export default Navbar;
 // import { Bars3Icon, XMarkIcon, ClockIcon } from "@heroicons/react/24/outline";
 // import { useState, useEffect } from "react";
 // import { motion, AnimatePresence } from "framer-motion";

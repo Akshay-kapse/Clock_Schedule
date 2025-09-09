@@ -1,4 +1,4 @@
-// import React, { useState } from "react";
+import  { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css"; // Importing the required styles
@@ -184,7 +184,7 @@ const ContactPage = () => {
 
             <div>
               <label htmlFor="expertise" className="block text-sm mb-1">
-                What Expertise You're Interested In
+                What Expertise You are Interested In
               </label>
               <select
                 id="expertise"

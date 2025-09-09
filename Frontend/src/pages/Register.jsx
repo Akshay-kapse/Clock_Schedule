@@ -1,28 +1,19 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
-
-
-// import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
-
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate(); // Initialize the navigate function
-
-  const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent form reload
-
-  const [showPassword, setShowPassword] = useState(false); // New state
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
 
     if (!username || !email || !password) {
       toast.error("All fields are required");
@@ -33,29 +24,11 @@ const Register = () => {
 
     try {
       const { data } = await axios.post(
-
-        "http://localhost:4001/api/user/register", // Replace with your backend URL
-
-        `${import.meta.env.VITE_API_BASE_URL}/api/user/register`,
-
+        "http://localhost:4001/api/user/register",
         payload,
         {
           withCredentials: true,
-          headers: {
-
-            "Content-Type": "application/json", // Set header to JSON
-          },
-        }
-      );
-      console.log(data);
-      toast.success(data.message || "User Registered Successfully");
-
-      if (data.token) {
-        localStorage.setItem("jwt", data.token); // Store token for authentication
-        console.log("Token stored:", localStorage.getItem("jwt"));
-
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
@@ -63,31 +36,22 @@ const Register = () => {
 
       if (data.token) {
         localStorage.setItem("jwt", data.token);
-
+        console.log("Token stored:", localStorage.getItem("jwt"));
       } else {
         throw new Error("Token missing from server response");
       }
 
-
-      // Clear the input fields
-
-
-      setEmail("");
+      // Clear input fields
       setUsername("");
+      setEmail("");
       setPassword("");
+
       navigate("/home");
     } catch (error) {
-
-      console.log("Error fetching data:", error);
-
-
-      toast.error(
-        error.response?.data?.message || "Please fill required fields"
-      );
+      console.error("Error fetching data:", error);
+      toast.error(error.response?.data?.message || "Please fill required fields");
     }
   };
-
-
 
 
   return (
@@ -99,9 +63,6 @@ const Register = () => {
               <div className="mx-5 font-semibold text-xl">
 
                 Clock<span className="font-bold  text-blue-500">Schedule</span>
-
-                Clock<span className="font-bold text-blue-500">Schedule</span>
-
               </div>
             </div>
             <div className="flex flex-col">
@@ -126,14 +87,14 @@ const Register = () => {
               />
 
 
-              <label className="mb-1 text-sm">Password</label>
+              {/* <label className="mb-1 text-sm">Password</label>
               <input
                 className="p-2 mb-3 border border-gray-300 rounded"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-              />
+              /> */}
 
 
               <label className="mb-1 text-sm">Password</label>

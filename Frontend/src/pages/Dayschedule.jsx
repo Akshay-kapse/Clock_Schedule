@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ArrowLeftIcon } from "@heroicons/react/solid";
+import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -14,10 +14,6 @@ function Schedule() {
   const [endDate, setEndDate] = useState("");
   const [timeLeftForGoal, setTimeLeftForGoal] = useState("");
   const [completedTasks, setCompletedTasks] = useState([]);
-
-  // const [goalDate, setGoalDate] = useState("");
-
-
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,33 +43,6 @@ function Schedule() {
   }, [goalDate]);
 
   // Fetch schedule
-
-  useEffect(() => {
-    const fetchGoalDetails = async () => {
-      try {
-        setLoading(true); // Set loading true while fetching
-        const response = await axios.get(
-          `http://localhost:4001/api/dayschedule/${goalId}/fetchschedule`,
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-        setSchedule(response.data.tasks || []);
-        setCompletedTasks(response.data.tasks.filter((task) => task.completed));
-        setLoading(false); // Set loading false after fetching
-      } catch (error) {
-        setError("Failed to fetch goal details.");
-        setLoading(false); // Set loading false in case of error
-      }
-    };
-
-    if (goalId) fetchGoalDetails();
-  }, [goalId]);
-
-  const scheduleCreate = async () => {
-    if (!newTask || !startDate || !endDate) {
-
   const fetchSchedules = async () => {
     if (!goalId) return;
     setLoading(true);
@@ -81,7 +50,7 @@ function Schedule() {
     try {
       // setLoading(true); // Set loading true while fetching
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/fetchschedule`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/fetchschedule`,
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
@@ -104,7 +73,6 @@ function Schedule() {
 
   const scheduleCreate = async () => {
     if (!newTask.trim() || !startDate || !endDate) {
-
       setError("Please fill in all fields.");
       return;
     }
@@ -112,10 +80,7 @@ function Schedule() {
     const goalDateTime = new Date(goalDate);
     const startDateTime = new Date(startDate);
     const endDateTime = new Date(endDate);
-
-    const now = new Date(); 
-
-
+    const now = new Date();
 
     if (startDateTime <= now || endDateTime <= now) {
       toast.error("Start date and end date must be after the present date.");
@@ -130,14 +95,9 @@ function Schedule() {
     }
 
     try {
-
-      await axios.post(
-        `http://localhost:4001/api/dayschedule/${goalId}/schedule/`,
-
       setLoading(true);
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/schedule/`,
-
+        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/schedule/`,
         {
           text: newTask,
           startDate: new Date(startDate).toISOString(),
@@ -147,20 +107,7 @@ function Schedule() {
         { withCredentials: true }
       );
 
-
-      // Directly update the schedule state without fetching again
-      const newSchedule = {
-        _id: Date.now().toString(), // Unique ID for the new task
-        text: newTask,
-        startDate,
-        endDate,
-        completed: false,
-      };
-
-      setSchedule((prevSchedule) => [...prevSchedule, newSchedule]);
-
       await fetchSchedules(); // Only this to update schedule state
-
 
       setNewTask("");
       setStartDate("");
@@ -170,11 +117,8 @@ function Schedule() {
     } catch (error) {
       toast.error("Failed to add schedule.");
       console.log(error);
-
-
     } finally {
       setLoading(false);
-
     }
   };
 
@@ -196,44 +140,22 @@ function Schedule() {
       );
 
       await axios.put(
-
-        `http://localhost:4001/api/dayschedule/${goalId}/updateschedule/${taskId}`,
-        { completed: updatedCompletionStatus },
-        { withCredentials: true }
-      );
-
-        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
         { completed: updatedCompletionStatus },
         { withCredentials: true }
       );
       toast.success("Task updated successfully!");
       fetchSchedules();
-
     } catch (error) {
       setError("Failed to update task status");
       console.error(error);
     }
   };
 
-
-  // Delete a task
-  const deleteTask = async (taskId) => {
-    try {
-      await axios.delete(
-        `http://localhost:4001/api/dayschedule/${goalId}/deleteschedule/${taskId}`,
-        { withCredentials: true }
-      );
-      setSchedule((prevSchedule) =>
-        prevSchedule.filter((s) => s._id !== taskId)
-      );
-      toast.success("Schedule deleted successfully!");
-    } catch (error) {
-      toast.error("Failed to delete schedule.");
-
   const deleteTask = async (id) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/deleteschedule/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/deleteschedule/${id}`,
         { withCredentials: true }
       );
       toast.success("Schedule deleted successfully!");
@@ -248,7 +170,6 @@ function Schedule() {
     } catch (error) {
       toast.error("Failed to delete schedule.");
       console.error(error);
-
     }
   };
 
@@ -264,64 +185,53 @@ function Schedule() {
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
 
-        <div className="sticky top-0 bg-[#262b32] z-10">
-
-
-        
-
-          <div className="text-center mb-6">
-            <h2 className="text-lg sm:text-xl font-bold text-white">
-              Goal: <span className="text-blue-500">{goal}</span>
-            </h2>
-            <p className="text-md sm:text-lg text-gray-300">
-              Goal Date: {new Date(goalDate).toLocaleDateString()}
-            </p>
-            <p className="text-sm sm:text-md text-gray-400 mt-2">
-              Time left: {timeLeftForGoal}
-            </p>
-          </div>
-          <div className="flex flex-col gap-6 mb-6">
-            <input
-              type="text"
-              placeholder="Enter task name"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md focus:outline-none w-full placeholder-gray-400"
-            />
-            <div className="flex gap-4">
-              <div className="flex flex-col w-1/2">
-                <label className="text-sm text-gray-300 mb-1">Start Time</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md w-full"
-                />
-              </div>
-              <div className="flex flex-col w-1/2">
-                <label className="text-sm text-gray-300 mb-1">End Time</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md w-full"
-                />
-              </div>
-            </div>
-            <button
-              onClick={scheduleCreate}
-              className="text-white bg-blue-600 hover:bg-blue-500 p-3 rounded-md transition duration-200 transform hover:scale-105"
-            >
-              Add Schedule
-            </button>
-          </div>
-          <h2 className="text-xl font-bold text-gray-300 mb-4">
-            Your Schedule
+        <div className="text-center mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-white">
+            Goal: <span className="text-blue-500">{goal}</span>
           </h2>
-
+          <p className="text-md sm:text-lg text-gray-300">
+            Goal Date: {new Date(goalDate).toLocaleDateString()}
+          </p>
+          <p className="text-sm sm:text-md text-gray-400 mt-2">
+            Time left: {timeLeftForGoal}
+          </p>
         </div>
-
-
+        <div className="flex flex-col gap-6 mb-6">
+          <input
+            type="text"
+            placeholder="Enter task name"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md focus:outline-none w-full placeholder-gray-400"
+          />
+          <div className="flex gap-4">
+            <div className="flex flex-col w-1/2">
+              <label className="text-sm text-gray-300 mb-1">Start Time</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md w-full"
+              />
+            </div>
+            <div className="flex flex-col w-1/2">
+              <label className="text-sm text-gray-300 mb-1">End Time</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="p-3 border border-gray-600 bg-gray-700 text-white rounded-md w-full"
+              />
+            </div>
+          </div>
+          <button
+            onClick={scheduleCreate}
+            className="text-white bg-blue-600 hover:bg-blue-500 p-3 rounded-md transition duration-200 transform hover:scale-105"
+          >
+            Add Schedule
+          </button>
+        </div>
+        <h2 className="text-xl font-bold text-gray-300 mb-4">Your Schedule</h2>
 
         <div className="space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900 h-full">
           {schedule.length === 0 ? (

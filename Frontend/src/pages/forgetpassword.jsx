@@ -7,21 +7,37 @@ const ForgotPassword = ({ onNext }) => {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await axios.post(
+
+  //       `${import.meta.env.VITE_API_BASE_URL}/api/userpassword/forgot-password`,
+
+  //       { email }
+  //     );
+  //     setMessage(res.data.message);
+  //     navigate("/verify-code", { state: { email } });
+  //   } catch (error) {
+  //     setMessage(error.response?.data?.message || "Something went wrong");
+  //   }
+  // };
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axios.post(
-
-        "http://localhost:4001/api/userpassword/forgot-password",
-
         `${import.meta.env.VITE_API_BASE_URL}/api/userpassword/forgot-password`,
-
         { email }
       );
       setMessage(res.data.message);
       navigate("/verify-code", { state: { email } });
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,9 +61,10 @@ const ForgotPassword = ({ onNext }) => {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50"
           >
-            Send Reset Code
+            {loading ? "Sending..." : "Send Reset Code"}
           </button>
         </form>
         {message && (
@@ -68,3 +85,5 @@ const ForgotPassword = ({ onNext }) => {
 };
 
 export default ForgotPassword;
+
+

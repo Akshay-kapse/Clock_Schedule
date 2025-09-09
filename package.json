@@ -1,9 +1,9 @@
 {
   "dependencies": {
-
-    "mongodb": "^6.10.0",
     "@heroicons/react": "^2.2.0",
-    "mongodb": "^6.10.0"
+    "aos": "^2.3.4",
+    "mongodb": "^6.10.0",
+    "react-toastify": "^11.0.5"
   },
   "scripts": {
     "dev": "vite",
