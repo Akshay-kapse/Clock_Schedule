@@ -1,7 +1,10 @@
-import React from "react";
+// import React from "react";
 import Navbar from "../src/components/Navbar.jsx";
 import Home from "../src/components/Home.jsx";
 import { Route, Routes, useLocation } from "react-router-dom";
+
+import { Navigate } from "react-router-dom";
+
 import Schedule from "../src/pages/Schedule.jsx";
 import Goals from "../src/pages/Goals.jsx";
 import About from "../src/pages/About.jsx";
@@ -15,6 +18,9 @@ import Hourschedule from "./pages/Hourschedule.jsx";
 import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
+
+import { Analytics } from "@vercel/analytics/react";
+
 
 function App() {
   // Hide navbar for specific routes
@@ -37,7 +43,11 @@ function App() {
 
       {/* defining routes */}
       <Routes>
+
          <Route exact path="/login" element={<Login />} />
+        <Route exact path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/home" />} />
+
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/forget-password" element={<ForgotPassword />} />
         <Route exact path="/verify-code" element={<VerifyCode />} />
@@ -53,6 +63,9 @@ function App() {
       </Routes>
 
       <Toaster />
+
+      <Analytics />
+
     </div>
   );
 }

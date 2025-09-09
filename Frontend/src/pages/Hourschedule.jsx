@@ -21,6 +21,10 @@ function Schedule() {
   const location = useLocation();
   const { goal, goalDate, id: goalId } = location.state || {};
 
+
+
+  // Calculate time left for the goal
+
   useEffect(() => {
     const calculateTimeLeftForGoal = () => {
       const now = new Date();
@@ -42,6 +46,7 @@ function Schedule() {
 
     return () => clearInterval(intervalId);
   }, [goalDate]);
+
 
   // Fetch goal details
   useEffect(() => {
@@ -96,6 +101,38 @@ function Schedule() {
     fetchSchedule();
   }, [goalId]);
 
+
+  // Fetch schedule
+  // ✅ Function to fetch schedules from backend
+  const fetchSchedules = async () => {
+    if (!goalId) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/hourschedule/${goalId}/fetchschedule`,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("Fetched schedules:", response.data.schedule);
+      setSchedule(response.data.schedule || []); // Make sure this is always an array
+      setCompletedTasks(
+        response.data.tasks?.filter((task) => task.completed) || []
+      );
+    } catch (error) {
+      setError("Failed to fetch schedule.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSchedules();
+  }, []);
+
   // Create a new task
   const scheduleCreate = async () => {
     if (!newTask.trim()) {
@@ -127,9 +164,14 @@ function Schedule() {
     try {
       setLoading(true);
 
+
       // Send the request to create the task
       await axios.post(
         `http://localhost:4001/api/hourschedule/${goalId}/schedule/`,
+
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/hourschedule/${goalId}/schedule/`,
+
         {
           text: newTask,
           startTime: start.toISOString(),
@@ -138,6 +180,7 @@ function Schedule() {
         },
         { withCredentials: true }
       );
+
 
       // Update the local state without waiting for a re-fetch
       const newSchedule = {
@@ -151,6 +194,12 @@ function Schedule() {
       setSchedule((prevSchedule) => [...prevSchedule, newSchedule]);
 
       // Clear form fields
+
+      // ✅ Refresh from backend
+      await fetchSchedules();
+
+      // Clear form
+
       setNewTask("");
       setStartHour("12");
       setStartMinute("00");
@@ -161,7 +210,12 @@ function Schedule() {
       setError(null);
       toast.success("Schedule added successfully!");
     } catch (error) {
+
       setError("Failed to create schedule.");
+
+      toast.error("Failed to create schedule.");
+      console.log(error);
+
     } finally {
       setLoading(false);
     }
@@ -170,6 +224,9 @@ function Schedule() {
   // Toggle task completion status
   const toggleCompleteStatus = async (taskId) => {
     const taskToUpdate = schedule.find((s) => s && s._id === taskId);
+
+
+
 
     if (!taskToUpdate || typeof taskToUpdate.completed === "undefined") {
       console.error("Task not found or invalid:", taskToUpdate);
@@ -185,11 +242,22 @@ function Schedule() {
         )
       );
 
+
       await axios.put(
         `http://localhost:4001/api/dayschedule/${goalId}/updateschedule/${taskId}`,
         { completed: updatedCompletionStatus },
         { withCredentials: true }
       );
+
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
+        { completed: updatedCompletionStatus },
+        { withCredentials: true }
+      );
+
+      toast.success("Task updated successfully!");
+      fetchSchedules();
+
     } catch (error) {
       setError("Failed to update task status");
       console.error(error);
@@ -200,6 +268,7 @@ function Schedule() {
   const deleteTask = async (id) => {
     try {
       await axios.delete(
+
         `http://localhost:4001/api/hourschedule/${goalId}/deleteschedule/${id}`,
         { withCredentials: true }
       );
@@ -209,6 +278,20 @@ function Schedule() {
     } catch (error) {
       toast.error("Failed to delete schedule.");
     
+
+        `${import.meta.env.VITE_API_BASE_URL}/api/hourschedule/${goalId}/deleteschedule/${id}`,
+        { withCredentials: true }
+      );
+      toast.success("Schedule deleted successfully!");
+
+      // Optimistically remove deleted schedule from state
+      setSchedule((prev) => prev.filter((item) => item._id !== id));
+
+      // Optionally refetch to stay in sync
+      await fetchSchedules();
+    } catch (error) {
+      toast.error("Failed to delete schedule.");
+
     }
   };
 
@@ -226,6 +309,7 @@ function Schedule() {
   const calculateTimeLeft = (endTime) => {
     const now = new Date();
     const end = new Date(endTime);
+
     const timeLeft = end - now;
 
     return timeLeft > 0
@@ -233,6 +317,29 @@ function Schedule() {
           (timeLeft / (1000 * 60)) % 60
         )}m left`
       : "Time's up";
+
+    const diff = end - now;
+
+    if (diff <= 0) {
+      return "0 hours";
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    if (days > 0) {
+      return `${days} day${days !== 1 ? "s" : ""} ${hours} hour${
+        hours !== 1 ? "s" : ""
+      } left`;
+    }
+
+    if (hours > 0) {
+      return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} min left`;
+    }
+
+    return `${minutes} min left`;
+
   };
 
   return (

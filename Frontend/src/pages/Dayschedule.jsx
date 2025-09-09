@@ -14,7 +14,10 @@ function Schedule() {
   const [endDate, setEndDate] = useState("");
   const [timeLeftForGoal, setTimeLeftForGoal] = useState("");
   const [completedTasks, setCompletedTasks] = useState([]);
+
   // const [goalDate, setGoalDate] = useState("");
+
+
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,6 +47,7 @@ function Schedule() {
   }, [goalDate]);
 
   // Fetch schedule
+
   useEffect(() => {
     const fetchGoalDetails = async () => {
       try {
@@ -69,6 +73,38 @@ function Schedule() {
 
   const scheduleCreate = async () => {
     if (!newTask || !startDate || !endDate) {
+
+  const fetchSchedules = async () => {
+    if (!goalId) return;
+    setLoading(true);
+    setError(null);
+    try {
+      // setLoading(true); // Set loading true while fetching
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/fetchschedule`,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log("Fetched schedules:", response.data.schedule);
+      setSchedule(response.data.tasks || []);
+      setCompletedTasks(
+        response.data.tasks?.filter((task) => task.completed) || []
+      );
+    } catch (error) {
+      setError("Failed to fetch schedule.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchSchedules();
+  }, []);
+
+  const scheduleCreate = async () => {
+    if (!newTask.trim() || !startDate || !endDate) {
+
       setError("Please fill in all fields.");
       return;
     }
@@ -76,7 +112,10 @@ function Schedule() {
     const goalDateTime = new Date(goalDate);
     const startDateTime = new Date(startDate);
     const endDateTime = new Date(endDate);
+
     const now = new Date(); 
+
+
 
     if (startDateTime <= now || endDateTime <= now) {
       toast.error("Start date and end date must be after the present date.");
@@ -91,8 +130,14 @@ function Schedule() {
     }
 
     try {
+
       await axios.post(
         `http://localhost:4001/api/dayschedule/${goalId}/schedule/`,
+
+      setLoading(true);
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/schedule/`,
+
         {
           text: newTask,
           startDate: new Date(startDate).toISOString(),
@@ -101,6 +146,7 @@ function Schedule() {
         },
         { withCredentials: true }
       );
+
 
       // Directly update the schedule state without fetching again
       const newSchedule = {
@@ -112,6 +158,10 @@ function Schedule() {
       };
 
       setSchedule((prevSchedule) => [...prevSchedule, newSchedule]);
+
+      await fetchSchedules(); // Only this to update schedule state
+
+
       setNewTask("");
       setStartDate("");
       setEndDate("");
@@ -120,6 +170,11 @@ function Schedule() {
     } catch (error) {
       toast.error("Failed to add schedule.");
       console.log(error);
+
+
+    } finally {
+      setLoading(false);
+
     }
   };
 
@@ -141,15 +196,25 @@ function Schedule() {
       );
 
       await axios.put(
+
         `http://localhost:4001/api/dayschedule/${goalId}/updateschedule/${taskId}`,
         { completed: updatedCompletionStatus },
         { withCredentials: true }
       );
+
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
+        { completed: updatedCompletionStatus },
+        { withCredentials: true }
+      );
+      toast.success("Task updated successfully!");
+      fetchSchedules();
+
     } catch (error) {
       setError("Failed to update task status");
       console.error(error);
     }
   };
+
 
   // Delete a task
   const deleteTask = async (taskId) => {
@@ -164,6 +229,26 @@ function Schedule() {
       toast.success("Schedule deleted successfully!");
     } catch (error) {
       toast.error("Failed to delete schedule.");
+
+  const deleteTask = async (id) => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/dayschedule/${goalId}/deleteschedule/${id}`,
+        { withCredentials: true }
+      );
+      toast.success("Schedule deleted successfully!");
+
+      // Remove the deleted task from the local schedule state
+      setSchedule((prevSchedule) =>
+        prevSchedule.filter((task) => task._id !== id)
+      );
+
+      // ✅ Re-fetch schedules from the server to ensure everything is in sync
+      await fetchSchedules();
+    } catch (error) {
+      toast.error("Failed to delete schedule.");
+      console.error(error);
+
     }
   };
 
@@ -178,7 +263,12 @@ function Schedule() {
         >
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
+
         <div className="sticky top-0 bg-[#262b32] z-10">
+
+
+        
+
           <div className="text-center mb-6">
             <h2 className="text-lg sm:text-xl font-bold text-white">
               Goal: <span className="text-blue-500">{goal}</span>
@@ -228,7 +318,10 @@ function Schedule() {
           <h2 className="text-xl font-bold text-gray-300 mb-4">
             Your Schedule
           </h2>
+
         </div>
+
+
 
         <div className="space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900 h-full">
           {schedule.length === 0 ? (

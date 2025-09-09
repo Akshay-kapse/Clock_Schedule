@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css"; // Importing the required styles
+
 
 
 const ContactPage = () => {
@@ -34,6 +36,7 @@ const ContactPage = () => {
     };
 
     try {
+
       const response = await fetch("http://localhost:4001/api/contact/submit-contact", {
         method: "POST",
         headers: {
@@ -41,6 +44,17 @@ const ContactPage = () => {
         },
         body: JSON.stringify(formData),
       });
+      // const response = await fetch(
+      //   `${import.meta.env.VITE_API_BASE_URL}/api/contact/submit-contact`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(formData),
+      //   }
+      // );
+
 
       const result = await response.json();
 
@@ -66,14 +80,27 @@ const ContactPage = () => {
   };
 
 
+
+
   return (
     <div className="p-8 md:p-16 bg-gray-100 flex justify-center items-center mt-16 md:mt-0">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
         {/* Left Section */}
         <div className="flex flex-col justify-center md:px-8">
+
           <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
             Connect with Our Team of Experts
           </h1>
+          {/* <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
+            Connect with Our Team of Experts
+          </h1> */}
+
+          <h2 className="text-4xl text-center ml-3 font-bold text-blue-500 mb-6 relative inline-block group">
+            Connect with Our Team of Experts
+            <span className="absolute bottom-[-6px] left-1/2 h-[4px] w-0 bg-blue-600 transition-all duration-500 group-hover:left-0 group-hover:w-full"></span>
+          </h2>
+
+
           <p className="text-lg text-gray-700 mb-6">
             Contact our team of excellence-driven experts today to bring your
             project to life.
