@@ -1,16 +1,10 @@
+# Dependencies
+node_modules/
 
-# Dependency directories
-node_modules
-
-# Production build
-dist
-dist-ssr
-+.vercel
-+.env
-+.env.local
-+.env.*.local
-
-# Local environment files
+# Environment files
+.env
+.env.local
+.env.*.local
 
 # Logs
 logs
