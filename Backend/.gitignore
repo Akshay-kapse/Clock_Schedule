@@ -1,2 +1,29 @@
-node_modules/
-.env
+
+# Dependency directories
+node_modules
+
+# Production build
+dist
+dist-ssr
++.vercel
++.env
++.env.local
++.env.*.local
+
+# Local environment files
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build
+dist/
+build/
+
+# OS / Editor files
+.DS_Store
+.vscode/
+.idea/
