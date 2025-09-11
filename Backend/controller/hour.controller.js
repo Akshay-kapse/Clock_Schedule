@@ -56,30 +56,48 @@ export const createSchedule = async (req, res) => {
 
 
 // Get Schedule
+// export const getSchedule = async (req, res) => {
+//   // Extract goalId from the request parameters
+//   const { goalId } = req.params;
+
+//   try {
+//     // Fetch schedules from the database filtered by the goalId
+//     const schedule = await Hourschedule.find({ goalId });
+
+//     // Check if no schedules are found for the given goalId
+//     if (!schedule.length) {
+//       // Respond with a 404 status if no schedules are found
+//       return res.status(404).json({ message: "No schedule found for this goal." });
+//     }
+
+//     // If schedules are found, return them with a success response
+//     res.status(200).json({
+//       message: "Schedule fetched successfully",
+//       schedule, // Include the fetched schedules in the response
+//     });
+//   } catch (error) {
+//     // Log the error for debugging purposes
+//     console.error("Error fetching schedule:", error.message);
+
+//     // Respond with a 500 status for server errors
+//     res.status(500).json({ message: "Error occurred in fetching schedule." });
+//   }
+// };
 export const getSchedule = async (req, res) => {
-  // Extract goalId from the request parameters
   const { goalId } = req.params;
 
   try {
-    // Fetch schedules from the database filtered by the goalId
     const schedule = await Hourschedule.find({ goalId });
 
-    // Check if no schedules are found for the given goalId
-    if (!schedule.length) {
-      // Respond with a 404 status if no schedules are found
-      return res.status(404).json({ message: "No schedule found for this goal." });
-    }
-
-    // If schedules are found, return them with a success response
-    res.status(200).json({
-      message: "Schedule fetched successfully",
-      schedule, // Include the fetched schedules in the response
+    // ✅ Always return success, even if empty
+    return res.status(200).json({
+      message: schedule.length
+        ? "Schedule fetched successfully"
+        : "No schedules available yet",
+      schedule, // either array with data OR []
     });
   } catch (error) {
-    // Log the error for debugging purposes
     console.error("Error fetching schedule:", error.message);
-
-    // Respond with a 500 status for server errors
     res.status(500).json({ message: "Error occurred in fetching schedule." });
   }
 };

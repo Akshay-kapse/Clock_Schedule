@@ -48,27 +48,25 @@ export const createSchedule = async (req, res) => {
   }
 };
 
-// Controller to fetch schedules for a specific goal
 export const getSchedule = async (req, res) => {
-  const { goalId } = req.params; // Extract goalId from request parameters
+  const { goalId } = req.params;
 
   try {
-    // Find all tasks associated with the given goalId and sort by startDate
-    const tasks = await Dayschedule.find({ goalId }).sort({ startDate: 1 });
+    const schedule = await Dayschedule.find({ goalId });
 
-    // If no tasks are found, respond with a 404 status
-    if (!tasks.length) {
-      return res.status(404).json({ message: "No tasks found for this goal" });
-    }
-
-    // Respond with the tasks if found
-    res.status(200).json({ message: "Tasks fetched successfully", tasks });
+    // ✅ Always return success, even if empty
+    return res.status(200).json({
+      message: schedule.length
+        ? "Schedule fetched successfully"
+        : "No schedules available yet",
+      schedule, // either array with data OR []
+    });
   } catch (error) {
-    // Log the error and respond with an internal server error message
-    console.error("Error occurred while fetching tasks:", error.message);
-    res.status(500).json({ message: "Error fetching tasks", error: error.message });
+    console.error("Error fetching schedule:", error.message);
+    res.status(500).json({ message: "Error occurred in fetching schedule." });
   }
 };
+
 
 // Controller to update an existing schedule
 export const updateSchedule = async (req, res) => {

@@ -1,6 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  outputFileTracingRoot: __dirname,
-}
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-module.exports = nextConfig
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+  },
+  build: {
+    outDir: 'dist',
+  },
+  base: '/',
+});

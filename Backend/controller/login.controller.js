@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"; // Importing bcrypt for password hashing
 import { z } from "zod"; // Importing zod for schema validation
 import createTokensAndSaveCookies from "../jwt/AuthToken.js"; // Custom JWT utility for token creation and cookie handling
 
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 // Define a Zod schema for user input validation
 const userSchema = z.object({
@@ -19,6 +19,7 @@ const userSchema = z.object({
 
 // Controller for user registration
 export const register = async (req, res) => {
+  console.log("🔍 Register Method Called");
   try {
     const { username, email, password } = req.body; // Extracting user inputs from the request body
 
@@ -31,6 +32,7 @@ export const register = async (req, res) => {
 
     // Validate user inputs using Zod schema
     const validation = userSchema.safeParse({ email, username, password });
+
     if (!validation.success) {
       // Extract validation error messages
       const errorMessage = validation.error.errors.map((err) => err.message);
@@ -55,7 +57,7 @@ export const register = async (req, res) => {
 
     // Save the user document to the database
     await newUser.save();
-
+    console.log("✅ User registered:", newUser);
     // If the user is successfully saved, create a JWT and save it as a cookie
     if (newUser) {
       let token = await createTokensAndSaveCookies(newUser._id, res); // Generate token and store in cookies
@@ -78,30 +80,29 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-
   const { email, password } = req.body;
 
   try {
     if (!email || !password) {
-      return res.status(400).json({ message: 'Please fill required fields' });
+      return res.status(400).json({ message: "Please fill required fields" });
     }
 
-    const user = await Userlogin.findOne({ email }).select('+password');
+    const user = await Userlogin.findOne({ email }).select("+password");
     if (!user || !user.password) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     // Generate JWT token and set as a cookie
     const token = await createTokensAndSaveCookies(user._id, res);
     console.log("Login: Token generated: ", token);
-    
+
     res.status(200).json({
-      message: 'User logged in successfully',
+      message: "User logged in successfully",
       user: {
         _id: user._id,
         username: user.username,
@@ -110,8 +111,8 @@ export const login = async (req, res) => {
       token: token,
     });
   } catch (error) {
-    console.error('Error during login:', error);
-    return res.status(500).json({ error: 'Internal Server error' });
+    console.error("Error during login:", error);
+    return res.status(500).json({ error: "Internal Server error" });
   }
 };
 

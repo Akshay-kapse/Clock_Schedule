@@ -3,13 +3,15 @@ import sendEmail from "../Utils/sendEmail.js";
 // import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 
-
 const rateLimitMap = new Map(); // Store request timestamps
 
 export const forgotPassword = async (req, res) => {
+  console.log("🔍 Forgot Password Request");
+  console.log("Received forgot password request:", req.body);
   const { email } = req.body;
   const currentTime = Date.now();
   const expiresAt = new Date(currentTime + 10 * 60 * 1000); // Code expires in 10 mins
+  console.log("Processing email for:", email);
 
   if (!rateLimitMap.has(email)) rateLimitMap.set(email, []);
 
@@ -35,7 +37,7 @@ export const forgotPassword = async (req, res) => {
       { code, expiresAt },
       { upsert: true, new: true }
     );
-
+    console.log(`Generated code ${code} for ${email}, expires at ${expiresAt}`);
     await sendEmail(email, code);
 
     res.status(200).json({ message: "Code sent successfully" });
@@ -62,11 +64,12 @@ export const verifyCode = async (req, res) => {
         .json({ message: "Code expired. Please request a new one." });
     }
 
-    if (record.code === enteredCode) {  // ✅ Fixed: Checking correct field
+    if (record.code === enteredCode) {
+      // ✅ Fixed: Checking correct field
       return res.json({ success: true, message: "Code verified successfully" });
     }
 
-    return res.status(400).json({ message: "Invalid code" }); 
+    return res.status(400).json({ message: "Invalid code" });
   } catch (error) {
     console.error("Error verifying code:", error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -74,6 +77,7 @@ export const verifyCode = async (req, res) => {
 };
 
 export const resetPassword = async (req, res) => {
+  console.log("🔍 Reset Password Request");
   try {
     const { email, newPassword } = req.body;
 
@@ -90,7 +94,7 @@ export const resetPassword = async (req, res) => {
     // Update user password in the database & clear reset code
     const updatedUser = await Userlogin.findOneAndUpdate(
       { email },
-      { password: hashedPassword, code: null, expiresAt: null },  // ✅ Clear reset code
+      { password: hashedPassword, code: null, expiresAt: null }, // ✅ Clear reset code
       { new: true }
     );
 

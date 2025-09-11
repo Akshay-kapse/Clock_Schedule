@@ -58,23 +58,36 @@ function Schedule() {
     try {
       // setLoading(true); // Set loading true while fetching
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/fetchschedule`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/dayschedule/${goalId}/fetchschedule`,
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("Fetched schedules:", response.data.schedule);
-      setSchedule(response.data.tasks || []);
-      setCompletedTasks(
-        response.data.tasks?.filter((task) => task.completed) || []
-      );
+      // console.log("Fetched schedules:", response.data.schedule);
+
+      const fetchedSchedule = response.data.schedule || [];
+      console.log("Fetched schedules:", fetchedSchedule);
+
+      if (fetchedSchedule.length === 0) {
+        setSchedule([]); // explicitly set empty array
+        // setError("No schedules available yet."); // Optional: show custom message
+      } else {
+        setSchedule(fetchedSchedule);
+        setCompletedTasks(
+          response.data.tasks?.filter((task) => task.completed) || []
+        );
+      }
     } catch (error) {
-      setError("Failed to fetch schedule.");
+      console.error("Error fetching schedules:", error);
+      setError("Something went wrong while fetching schedules.");
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchSchedules();
   }, []);
@@ -105,7 +118,9 @@ function Schedule() {
     try {
       setLoading(true);
       await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/schedule/`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/dayschedule/${goalId}/schedule/`,
         {
           text: newTask,
           startDate: new Date(startDate).toISOString(),
@@ -122,6 +137,7 @@ function Schedule() {
       setEndDate("");
       setError(null);
       toast.success("Schedule added successfully!");
+      fetchSchedules();
     } catch (error) {
       toast.error("Failed to add schedule.");
       console.log(error);
@@ -148,7 +164,9 @@ function Schedule() {
       );
 
       await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/updateschedule/${taskId}`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/dayschedule/${goalId}/updateschedule/${taskId}`,
         { completed: updatedCompletionStatus },
         { withCredentials: true }
       );
@@ -163,7 +181,9 @@ function Schedule() {
   const deleteTask = async (id) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/dayschedule/${goalId}/deleteschedule/${id}`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/dayschedule/${goalId}/deleteschedule/${id}`,
         { withCredentials: true }
       );
       toast.success("Schedule deleted successfully!");
@@ -328,12 +348,8 @@ function Schedule() {
           >
             <div className="flex items-center gap-3 mb-6">
               <CalendarDaysIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">
-                Daily Tasks
-              </h2>
-              <span className="status-badge info">
-                {schedule.length} tasks
-              </span>
+              <h2 className="text-xl font-semibold text-white">Daily Tasks</h2>
+              <span className="status-badge info">{schedule.length} tasks</span>
             </div>
 
             <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
@@ -388,7 +404,8 @@ function Schedule() {
                             <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
                               <span className="flex items-center gap-1">
                                 <CalendarDaysIcon className="w-4 h-4" />
-                                {formatDate(task.startDate)} - {formatDate(task.endDate)}
+                                {formatDate(task.startDate)} -{" "}
+                                {formatDate(task.endDate)}
                               </span>
                               <span
                                 className={`status-badge ${

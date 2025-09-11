@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import {
   ClockIcon,
   CalendarDaysIcon,
-  TargetIcon,
   UserGroupIcon,
   LightBulbIcon,
   RocketLaunchIcon,
   CheckCircleIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
+import { TbTarget } from "react-icons/tb";
 
 const AboutPage = () => {
   const features = [
@@ -26,7 +26,7 @@ const AboutPage = () => {
       color: "from-purple-500 to-pink-500"
     },
     {
-      icon: TargetIcon,
+      icon: TbTarget,
       title: "Goal Setting",
       description: "Set meaningful goals with deadlines and track your progress with detailed analytics.",
       color: "from-green-500 to-teal-500"

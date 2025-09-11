@@ -60,7 +60,7 @@ Create `.env` files in both frontend and backend.
 ### 💻 Frontend (`Frontend/.env`)
 
 ```
-VITE_API_BASE_URL=https://right-1.onrender.com
+VITE_BACKEND_UR=https://right-1.onrender.com
 ```
 
 ### 💻 Backend (`Backend/.env`)

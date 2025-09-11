@@ -56,32 +56,40 @@ function Schedule() {
 
   // Fetch schedule
   // ✅ Function to fetch schedules from backend
-  const fetchSchedule = async () => {
-    if (!goalId) return;
+const fetchSchedule = async () => {
+  if (!goalId) return;
 
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_BACKEND_URL
-        }/api/hourschedule/${goalId}/fetchschedule`,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      console.log("Fetched schedules:", response.data.schedule);
-      setSchedule(response.data.schedule || []); // Make sure this is always an array
+  setLoading(true);
+  setError(null);
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_URL}/api/hourschedule/${goalId}/fetchschedule`,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    // If schedule is empty, set [] instead of throwing error
+    const fetchedSchedule = response.data.schedule || [];
+    console.log("Fetched schedules:", fetchedSchedule);
+
+    if (fetchedSchedule.length === 0) {
+      setSchedule([]); // explicitly set empty array
+    } else {
+      setSchedule(fetchedSchedule);
       setCompletedTasks(
         response.data.tasks?.filter((task) => task.completed) || []
       );
-    } catch (error) {
-      setError("Failed to fetch schedule.");
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Error fetching schedules:", error);
+    setError("Something went wrong while fetching schedules.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchSchedule();
@@ -156,23 +164,12 @@ function Schedule() {
         { withCredentials: true }
       );
 
-      // ✅ Refresh from backend
-      // await fetchSchedule();
-
-      // // Clear form
-      // setNewTask("");
-      // setStartHour("12");
-      // setStartMinute("00");
-      // setStartPeriod("AM");
-      // setEndHour("12");
-      // setEndMinute("00");
-      // setEndPeriod("AM");
-      // setError(null);
       const newSchedule = response.data.schedule || response.data;
       setSchedule((prev) => [...prev, newSchedule]);
       resetForm();
       setError(null);
       toast.success("Schedule created successfully!");
+      fetchSchedule();
     } catch (error) {
       toast.error("Failed to create schedule.");
       console.log(error);
@@ -222,8 +219,6 @@ function Schedule() {
         }/api/hourschedule/${goalId}/deleteschedule/${id}`,
         { withCredentials: true }
       );
-      toast.success("Schedule deleted successfully!");
-
       // Optimistically remove deleted schedule from state
       setSchedule((prev) => prev.filter((item) => item._id !== id));
       toast.success("Schedule deleted successfully!");
@@ -359,12 +354,14 @@ function Schedule() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Start Time */}
                 <div>
-                  <label className="form-label">Start Time</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Start Time
+                  </label>
                   <div className="flex gap-2">
                     <select
                       value={startHour}
                       onChange={(e) => setStartHour(e.target.value)}
-                      className="form-input flex-1"
+                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -381,7 +378,7 @@ function Schedule() {
                     <select
                       value={startMinute}
                       onChange={(e) => setStartMinute(e.target.value)}
-                      className="form-input flex-1"
+                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -396,7 +393,7 @@ function Schedule() {
                     <select
                       value={startPeriod}
                       onChange={(e) => setStartPeriod(e.target.value)}
-                      className="form-input"
+                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -410,12 +407,14 @@ function Schedule() {
 
                 {/* End Time */}
                 <div>
-                  <label className="form-label">End Time</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    End Time
+                  </label>
                   <div className="flex gap-2">
                     <select
                       value={endHour}
                       onChange={(e) => setEndHour(e.target.value)}
-                      className="form-input flex-1"
+                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -432,7 +431,7 @@ function Schedule() {
                     <select
                       value={endMinute}
                       onChange={(e) => setEndMinute(e.target.value)}
-                      className="form-input flex-1"
+                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -447,7 +446,7 @@ function Schedule() {
                     <select
                       value={endPeriod}
                       onChange={(e) => setEndPeriod(e.target.value)}
-                      className="form-input"
+                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -504,9 +503,7 @@ function Schedule() {
           >
             <div className="flex items-center gap-3 mb-6">
               <ClockIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">
-                Hourly Tasks
-              </h2>
+              <h2 className="text-xl font-semibold text-white">Hourly Tasks</h2>
               <span className="status-badge info">
                 {sortedSchedule.length} tasks
               </span>

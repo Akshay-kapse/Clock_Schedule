@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -16,163 +18,201 @@ const Register = () => {
     e.preventDefault();
 
     if (!username || !email || !password) {
-      toast.error("All fields are required");
+      toast.error("All fields are required ❌");
       return;
     }
 
-    const payload = { username, email, password };
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters ❌");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:4001/api/user/register",
-        payload,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/register`,
+        { username, email, password }, // data goes here
+        { headers: { "Content-Type": "application/json" } } // headers go here
       );
 
-      toast.success(data.message || "User Registered Successfully");
+      // const data = await res.data;
+      console.log("Register response:", res);
 
-      if (data.token) {
-        localStorage.setItem("jwt", data.token);
-        console.log("Token stored:", localStorage.getItem("jwt"));
+      if (res.status === 201) {
+        toast.success(res.data.message || "User registered successfully ✅");
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        navigate("/login");
       } else {
-        throw new Error("Token missing from server response");
+        toast.error(res.data.error || "Registration failed ❌");
       }
-
-      // Clear input fields
-      setUsername("");
-      setEmail("");
-      setPassword("");
-
-      navigate("/home");
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      toast.error(error.response?.data?.message || "Please fill required fields");
+    } catch (err) {
+      console.error("Register error:", err);
+      toast.error("Something went wrong. Try again ⚠️");
+    } finally {
+      setLoading(false);
     }
   };
 
-
   return (
-    <div className="flex items-center justify-center h-screen m-0 bg-[#0C67A0] font-sans">
-      <div className="container flex items-center justify-center h-full w-full">
-        <div className="bg-white p-5 rounded-lg shadow-md w-72">
-          <form onSubmit={handleRegister}>
-            <div className="flex justify-center items-center mb-5">
-              <div className="mx-5 font-semibold text-xl">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-gray-100"
+      >
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-2xl">🔗</span>
+          </div>
+          <h2 className="text-3xl font-extrabold text-blue-600 mb-2">
+            Url<span className="text-gray-900">Shorter</span>
+          </h2>
+          <p className="text-gray-600">
+            Create your account to start shortening URLs
+          </p>
+        </div>
 
-                Clock<span className="font-bold  text-blue-500">Schedule</span>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <h2 className="mb-5 text-xl font-semibold">Registration Form</h2>
+        {/* Form */}
+        <form onSubmit={handleRegister} className="space-y-6">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+              required
+              aria-describedby="email-help"
+            />
+            <p id="email-help" className="text-xs text-gray-500 mt-1">
+              We'll use this email for your account and notifications
+            </p>
+          </div>
 
-              <label className="mb-1 text-sm">Email</label>
+          {/* Username */}
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="johndoe"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+              required
+              minLength={3}
+              maxLength={20}
+              aria-describedby="username-help"
+            />
+            <p id="username-help" className="text-xs text-gray-500 mt-1">
+              Choose a unique username (3-20 characters)
+            </p>
+          </div>
+
+          {/* Password with toggle */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              Password
+            </label>
+            <div className="relative">
               <input
-                className="p-2 mb-3 border border-gray-300 rounded"
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter Your Email"
-              />
-
-              <label className="mb-1 text-sm">Username</label>
-              <input
-                className="p-2 mb-3 border border-gray-300 rounded"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter Your Username"
-              />
-
-
-              {/* <label className="mb-1 text-sm">Password</label>
-              <input
-                className="p-2 mb-3 border border-gray-300 rounded"
-                type="password"
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-              /> */}
-
-
-              <label className="mb-1 text-sm">Password</label>
-              <div className="relative">
-                <input
-                  className="p-2 pr-10 mb-3 w-full border border-gray-300 rounded"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-2.5 right-2 text-gray-600"
-                >
-                  {showPassword ? (
-                    // Eye Off SVG
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-.69.07-1.36.203-2M6.29 6.29a9.956 9.956 0 00-1.9 2.665M9 9a3 3 0 104.243 4.243M15 15l3.536 3.536M3 3l18 18"
-                      />
-                    </svg>
-                  ) : (
-                    // Eye SVG
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  )}
-                </button>
-              </div>
-
-
+                disabled={loading}
+                required
+                minLength={6}
+                aria-describedby="password-help"
+              />
               <button
-                type="submit"
-                className="p-2 bg-[#033452] text-white rounded cursor-pointer hover:bg-[#02223f]"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer text-lg select-none p-1 rounded-md hover:bg-gray-100 transition-colors"
+                disabled={loading}
               >
-                Register
+                {showPassword ? "🙈" : "👁️"}
               </button>
-
-              <p className="mt-4 text-center">
-                Already have an account?{" "}
-                <Link to="/login" className="text-blue-500 hover:underline">
-                  Login Now
-                </Link>
-              </p>
             </div>
-          </form>
+            <p id="password-help" className="text-xs text-gray-500 mt-1">
+              Must be at least 6 characters long
+            </p>
+          </div>
+
+          {/* Submit */}
+          <motion.button
+            type="submit"
+            disabled={loading}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span>Creating Account...</span>
+              </>
+            ) : (
+              <>
+                <span>Create Account</span>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                  />
+                </svg>
+              </>
+            )}
+          </motion.button>
+        </form>
+
+        {/* Footer */}
+        <div className="text-center pt-6 border-t border-gray-200 mt-6">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <span
+              onClick={() => (window.location.href = "/login")}
+              className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors"
+            >
+              Sign In
+            </span>
+          </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
-
 export default Register;

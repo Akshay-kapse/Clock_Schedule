@@ -1,29 +1,27 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  SunIcon, 
-  MoonIcon, 
+import {
+  SunIcon,
+  MoonIcon,
   SwatchIcon,
   CalendarDaysIcon,
   ClockIcon,
-  TargetIcon,
-  ChartBarIcon
+  ChartBarIcon,
 } from "@heroicons/react/24/outline";
+import { TbTarget } from "react-icons/tb";
 
 export default function Home() {
   const [time, setTime] = useState(new Date());
   const [is24Hour, setIs24Hour] = useState(false);
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
+    const interval = setInterval(() => setTime(new Date()), 100); // 100ms for smooth motion
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const toggleFormat = () => setIs24Hour((prev) => !prev);
@@ -34,19 +32,69 @@ export default function Home() {
   const ampm = time.getHours() >= 12 ? "PM" : "AM";
 
   const themes = [
-    { id: 'light', name: 'Light', icon: SunIcon, gradient: 'from-blue-400 to-purple-500' },
-    { id: 'dark', name: 'Dark', icon: MoonIcon, gradient: 'from-purple-500 to-pink-500' },
-    { id: 'purple', name: 'Purple', icon: SwatchIcon, gradient: 'from-indigo-500 to-purple-600' }
+    {
+      id: "light",
+      name: "Light",
+      icon: SunIcon,
+      background: "bg-gradient-to-br from-blue-100 via-white to-blue-50",
+    },
+    {
+      id: "dark",
+      name: "Dark",
+      icon: MoonIcon,
+      background:
+        "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900",
+    },
+    {
+      id: "purple",
+      name: "Purple",
+      icon: SwatchIcon,
+      background:
+        "bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900",
+    },
   ];
 
   const quickActions = [
-    { href: "/schedule", icon: CalendarDaysIcon, text: "Schedule", color: "from-blue-500 to-cyan-500" },
-    { href: "/goals", icon: TargetIcon, text: "Goals", color: "from-purple-500 to-pink-500" },
-    { href: "/about", icon: ChartBarIcon, text: "Analytics", color: "from-green-500 to-teal-500" }
+    {
+      href: "/schedule",
+      icon: CalendarDaysIcon,
+      text: "Schedule",
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      href: "/goals",
+      icon: TbTarget,
+      text: "Goals",
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      href: "/about",
+      icon: ChartBarIcon,
+      text: "Analytics",
+      color: "from-green-500 to-teal-500",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div
+      className={`relative min-h-screen pt-20 transition-colors duration-500 
+    ${
+      theme === "light"
+        ? "bg-gradient-to-br from-blue-100 via-white to-blue-50"
+        : ""
+    }
+    ${
+      theme === "dark"
+        ? "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"
+        : ""
+    }
+    ${
+      theme === "purple"
+        ? "bg-gradient-to-br from-indigo-900 via-purple-800 to-indigo-900"
+        : ""
+    }
+  `}
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -77,7 +125,8 @@ export default function Home() {
               </h1>
             </motion.div>
             <p className="text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto">
-              Master your time with beautiful, interactive clocks and smart scheduling
+              Master your time with beautiful, interactive clocks and smart
+              scheduling
             </p>
           </div>
 
@@ -97,13 +146,15 @@ export default function Home() {
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
                       theme === themeOption.id
                         ? `bg-gradient-to-r ${themeOption.gradient} text-white shadow-lg`
-                        : 'text-gray-300 hover:bg-white/10'
+                        : "text-gray-300 hover:bg-white/10"
                     }`}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <themeOption.icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{themeOption.name}</span>
+                    <span className="text-sm font-medium">
+                      {themeOption.name}
+                    </span>
                   </motion.button>
                 ))}
               </div>
@@ -134,9 +185,16 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <h2 className="text-2xl font-bold text-white mb-8 text-center">Time Circles</h2>
+              <h2 className="text-2xl font-bold text-white mb-8 text-center">
+                Time Circles
+              </h2>
               <div className="flex flex-wrap justify-center gap-8">
-                <Circle value={hours} max={is24Hour ? 24 : 12} label="Hours" delay={0} />
+                <Circle
+                  value={hours}
+                  max={is24Hour ? 24 : 12}
+                  label="Hours"
+                  delay={0}
+                />
                 <Circle value={minutes} max={60} label="Minutes" delay={0.2} />
                 <Circle value={seconds} max={60} label="Seconds" delay={0.4} />
               </div>
@@ -149,15 +207,19 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
             >
-              <h2 className="text-2xl font-bold text-white mb-8 text-center">Digital Time</h2>
+              <h2 className="text-2xl font-bold text-white mb-8 text-center">
+                Digital Time
+              </h2>
               <div className="text-center">
                 <div className="text-6xl sm:text-7xl font-mono font-bold text-white mb-4">
-                  {hours.toString().padStart(2, '0')}:
-                  {minutes.toString().padStart(2, '0')}:
-                  {seconds.toString().padStart(2, '0')}
+                  {hours.toString().padStart(2, "0")}:
+                  {minutes.toString().padStart(2, "0")}:
+                  {seconds.toString().padStart(2, "0")}
                 </div>
                 {!is24Hour && (
-                  <div className="text-2xl font-bold text-purple-300 mb-4">{ampm}</div>
+                  <div className="text-2xl font-bold text-purple-300 mb-4">
+                    {ampm}
+                  </div>
                 )}
                 <div className="text-lg text-gray-300">
                   {time.toLocaleDateString("en-GB", {
@@ -178,7 +240,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <h2 className="text-2xl font-bold text-white mb-8 text-center">Analog Clock</h2>
+            <h2 className="text-2xl font-bold text-white mb-8 text-center">
+              Analog Clock
+            </h2>
             <div className="flex justify-center">
               <AnalogClock time={time} />
             </div>
@@ -191,7 +255,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
           >
-            <h2 className="text-2xl font-bold text-white mb-8">Quick Actions</h2>
+            <h2 className="text-2xl font-bold text-white mb-8">
+              Quick Actions
+            </h2>
             <div className="flex flex-wrap justify-center gap-4">
               {quickActions.map((action, index) => (
                 <QuickActionButton
@@ -299,103 +365,105 @@ function Circle({ value, max, label, delay }) {
   );
 }
 
+
 function AnalogClock({ time }) {
+  // calculate continuous positions
   const hours = time.getHours() % 12;
   const minutes = time.getMinutes();
   const seconds = time.getSeconds();
+  const ms = time.getMilliseconds();
 
-  const hourAngle = (hours * 30) + (minutes * 0.5);
-  const minuteAngle = minutes * 6;
-  const secondAngle = seconds * 6;
+  const secondsTotal = seconds + ms / 1000;            // e.g. 12.345s
+  const secondAngle = secondsTotal * 6;                // 360/60 = 6° per sec
+
+  const minutesTotal = minutes + secondsTotal / 60;    // e.g. 34.205min
+  const minuteAngle = minutesTotal * 6;                // 6° per minute
+
+  const hoursTotal = hours + minutesTotal / 60;        // e.g. 3.5708h
+  const hourAngle = hoursTotal * 30;                   // 360/12 = 30° per hour
 
   return (
     <div className="relative w-64 h-64">
       <svg width="256" height="256" viewBox="0 0 256 256" className="absolute inset-0">
-        {/* Clock Face */}
-        <circle
-          cx="128"
-          cy="128"
-          r="120"
-          fill="rgba(255, 255, 255, 0.1)"
-          stroke="rgba(255, 255, 255, 0.3)"
-          strokeWidth="2"
-        />
-        
-        {/* Hour Markers */}
+        {/* Face */}
+        <circle cx="128" cy="128" r="120" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" strokeWidth="2"/>
+
+        {/* Hour markers */}
         {[...Array(12)].map((_, i) => (
           <line
             key={i}
             x1="128"
-            y1="20"
+            y1="28"
             x2="128"
-            y2="35"
-            stroke="rgba(255, 255, 255, 0.6)"
-            strokeWidth="3"
+            y2="42"
+            stroke="rgba(255,255,255,0.6)"
+            strokeWidth={3}
             transform={`rotate(${i * 30} 128 128)`}
           />
         ))}
 
-        {/* Minute Markers */}
+        {/* Minute markers */}
         {[...Array(60)].map((_, i) => (
           i % 5 !== 0 && (
             <line
               key={i}
               x1="128"
-              y1="20"
+              y1="28"
               x2="128"
-              y2="28"
-              stroke="rgba(255, 255, 255, 0.3)"
-              strokeWidth="1"
+              y2="34"
+              stroke="rgba(255,255,255,0.25)"
+              strokeWidth={1}
               transform={`rotate(${i * 6} 128 128)`}
             />
           )
         ))}
 
-        {/* Hour Hand */}
-        <line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="70"
-          stroke="#8B5CF6"
-          strokeWidth="6"
-          strokeLinecap="round"
-          transform={`rotate(${hourAngle} 128 128)`}
-          className="clock-hand"
-        />
+        {/* Hour hand - shorter, thicker */}
+        <g transform={`rotate(${hourAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="82"
+            stroke="#8B5CF6"
+            strokeWidth={6}
+            strokeLinecap="round"
+          />
+        </g>
 
-        {/* Minute Hand */}
-        <line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="45"
-          stroke="#06B6D4"
-          strokeWidth="4"
-          strokeLinecap="round"
-          transform={`rotate(${minuteAngle} 128 128)`}
-          className="clock-hand"
-        />
+        {/* Minute hand - longer */}
+        <g transform={`rotate(${minuteAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="60"
+            stroke="#06B6D4"
+            strokeWidth={4}
+            strokeLinecap="round"
+          />
+        </g>
 
-        {/* Second Hand */}
-        <line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="35"
-          stroke="#EC4899"
-          strokeWidth="2"
-          strokeLinecap="round"
-          transform={`rotate(${secondAngle} 128 128)`}
-          className="clock-hand"
-        />
+        {/* Second hand - thin and long */}
+        <g transform={`rotate(${secondAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="48"
+            stroke="#EC4899"
+            strokeWidth={2}
+            strokeLinecap="round"
+          />
+        </g>
 
-        {/* Center Dot */}
-        <circle cx="128" cy="128" r="8" fill="#8B5CF6" />
+        {/* Center cap */}
+        <circle cx="128" cy="128" r="6" fill="#8B5CF6" />
       </svg>
     </div>
   );
 }
+
 
 function QuickActionButton({ href, icon, text, color, delay }) {
   return (

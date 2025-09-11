@@ -7,12 +7,12 @@ import {
   ClockIcon,
   HomeIcon,
   CalendarDaysIcon,
-  TargetIcon,
   InformationCircleIcon,
   PhoneIcon,
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
+import { TbTarget } from "react-icons/tb";
 
 const Navbar = () => {
   const [show, setShow] = useState(false);
@@ -53,7 +53,7 @@ const Navbar = () => {
   const navLinks = [
     { to: "/home", label: "Home", icon: HomeIcon },
     { to: "/schedule", label: "Schedule", icon: CalendarDaysIcon },
-    { to: "/goals", label: "Goals", icon: TargetIcon },
+    { to: "/goals", label: "Goals", icon: TbTarget  },
     { to: "/about", label: "About", icon: InformationCircleIcon },
     { to: "/contact", label: "Contact", icon: PhoneIcon },
   ];
