@@ -1,18 +1,21 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import {
+  ClockIcon,
+  ShieldCheckIcon,
+  ArrowLeftIcon,
+} from "@heroicons/react/24/outline";
 
 const VerifyCode = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const email = location.state?.email || ""; // Get email from state
+  const email = location.state?.email || "";
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
-
 
   const handleVerify = async (e) => {
     e.preventDefault();
@@ -22,11 +25,11 @@ const VerifyCode = () => {
       return;
     }
 
+    setLoading(true);
     try {
-      console.log("Verifying code with email:", email, "and code:", code); // Debug log
+      console.log("Verifying code with email:", email, "and code:", code);
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/userpassword/verify-code`,
-
+        "http://localhost:4001/api/userpassword/verify-code",
         {
           email: email.trim(),
           code: code.trim(),
@@ -34,7 +37,6 @@ const VerifyCode = () => {
       );
 
       console.log("Backend Response:", res.data);
-      console.log("Backend Response:", res.data.success);
 
       if (res.data.message === "Code verified successfully") {
         toast.success("Code verified successfully!");
@@ -45,140 +47,145 @@ const VerifyCode = () => {
     } catch (error) {
       console.error("Verification Error:", error.response?.data);
       setMessage(error.response?.data?.message || "Something went wrong");
-    }
-  };
-
-  const handleResendCode = async () => {
-    if (!email) {
-      toast.error("Email is missing. Please restart the process.");
-      return;
-    }
-
-    setResending(true);
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/forgotpassword`,
-        { email }
-      );
-      toast.success("New verification code sent! 📧");
-    } catch (error) {
-      toast.error("Failed to resend code. Please try again.");
     } finally {
-      setResending(false);
+      setLoading(false);
     }
   };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+      </div>
+
       <motion.div
+        className="relative z-10 w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-gray-100"
+        transition={{ duration: 0.6 }}
       >
-        {/* Logo/Heading */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">📧</span>
-          </div>
-          <h2 className="text-3xl font-extrabold text-blue-600 mb-2">
-            Url<span className="text-gray-900">Shorter</span>
-          </h2>
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">
-            Verify Your Code
-          </h3>
-          <p className="text-sm text-gray-600 mb-2">
-            We've sent a 6-digit verification code to:
-          </p>
-          <p className="font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg inline-block">
-            {email}
-          </p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleVerify} className="space-y-6">
-          <div>
-            <label
-              htmlFor="code"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Verification Code
-            </label>
-            <input
-              id="code"
-              type="text"
-              placeholder="000000"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white text-center text-2xl font-mono tracking-widest"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              disabled={loading}
-              required
-              maxLength={6}
-              pattern="[0-9]{6}"
-              aria-describedby="code-help"
-            />
-            <p
-              id="code-help"
-              className="text-xs text-gray-500 mt-1 text-center"
-            >
-              Enter the 6-digit code from your email
-            </p>
-          </div>
-
-          <motion.button
-            type="submit"
-            whileHover={{ scale: loading ? 1 : 1.02 }}
-            whileTap={{ scale: loading ? 1 : 0.98 }}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 disabled:cursor-not-allowed"
-            disabled={loading}
+        <div className="glass-card rounded-3xl p-8 shadow-2xl">
+          {/* Back Button */}
+          <motion.div
+            className="mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
           >
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Verifying...</span>
-              </>
-            ) : (
-              <>
-                <span>Verify Code</span>
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </>
-            )}
-          </motion.button>
-        </form>
+            <Link
+              to="/forget-password"
+              className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors duration-200"
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              Back
+            </Link>
+          </motion.div>
 
-        {/* Footer */}
-        <div className="mt-8 text-center pt-6 border-t border-gray-200 space-y-3">
-          <div>
-            <p className="text-sm text-gray-600 mb-2">
-              Didn't receive the code?
+          {/* Logo */}
+          <motion.div
+            className="text-center mb-8"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl shadow-lg">
+                <ClockIcon className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold">
+                <span className="text-white">Clock</span>
+                <span className="bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                  Schedule
+                </span>
+              </h1>
+            </div>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <ShieldCheckIcon className="w-6 h-6 text-purple-300" />
+              <h2 className="text-xl font-semibold text-white">Verify Code</h2>
+            </div>
+            <p className="text-gray-300 text-sm mb-2">
+              A verification code has been sent to:
             </p>
-            <button
-              onClick={handleResendCode}
-              disabled={resending || loading}
-              className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            <p className="text-purple-300 font-medium">{email}</p>
+          </motion.div>
+
+          <form onSubmit={handleVerify} className="space-y-6">
+            {/* Code Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
             >
-              {resending ? "Sending..." : "Resend Code"}
-            </button>
-          </div>
-          <div>
-            <span
-              onClick={() => (window.location.href = "/forgot-password")}
-              className="text-sm text-gray-500 hover:text-gray-700 hover:underline transition-colors"
+              <label className="form-label">
+                <ShieldCheckIcon className="w-4 h-4 inline mr-2" />
+                Verification Code
+              </label>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter 6-digit code"
+                className="form-input text-center text-lg tracking-widest"
+                maxLength="6"
+                required
+              />
+            </motion.div>
+
+            {/* Submit Button */}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
             >
-              ← Back to Email Entry
-            </span>
-          </div>
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="spinner"></div>
+                  Verifying...
+                </div>
+              ) : (
+                "Verify Code"
+              )}
+            </motion.button>
+
+            {/* Message */}
+            {message && (
+              <motion.div
+                className={`text-center p-3 rounded-xl text-sm ${
+                  message.includes("successfully")
+                    ? "bg-green-500/20 border border-green-500/30 text-green-300"
+                    : "bg-red-500/20 border border-red-500/30 text-red-300"
+                }`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                {message}
+              </motion.div>
+            )}
+
+            {/* Resend Link */}
+            <motion.p
+              className="text-center text-gray-300 text-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              Didn't receive the code?{" "}
+              <Link
+                to="/forget-password"
+                className="text-purple-300 hover:text-purple-200 font-medium transition-colors duration-200"
+              >
+                Resend Code
+              </Link>
+            </motion.p>
+          </form>
         </div>
       </motion.div>
     </div>
