@@ -1,211 +1,214 @@
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import {
+  EyeIcon,
+  EyeSlashIcon,
+  ClockIcon,
+  UserIcon,
+  LockClosedIcon,
+} from "@heroicons/react/24/outline";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigateTo = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent form reload
-
-    // Check for empty fields
+    e.preventDefault();
+    
     if (!email || !password) {
       toast.error("All fields are required");
       return;
     }
 
-    // Create JSON payload
+    setLoading(true);
     const payload = { email, password };
 
     try {
-      // Send login request to the server
       const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/login`,
+        "http://localhost:4001/api/user/login",
         payload,
         {
-          withCredentials: true, // If cookies are used
+          withCredentials: true,
           headers: {
-            "Content-Type": "application/json", // Set header to JSON
+            "Content-Type": "application/json",
           },
         }
       );
 
-      // Log server response for debugging
-      console.log("Login Response:", data);
-
-      // Notify user of successful login
       toast.success(data.message || "User logged in successfully");
 
-      // Save the token to localStorage
       if (data.token) {
-        localStorage.setItem("jwt", data.token); // Store token for authentication
-        console.log("Token stored:", localStorage.getItem("jwt"));
+        localStorage.setItem("jwt", data.token);
       } else {
         throw new Error("Token missing from server response");
       }
 
-      // Clear form fields
       setEmail("");
       setPassword("");
-
-      // Navigate to the home page
       navigateTo("/");
     } catch (error) {
-      // Log and display error message
       console.error("Login Error:", error);
       toast.error(
         error.response?.data?.message || "Please check your credentials"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+      </div>
+
       <motion.div
+        className="relative z-10 w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border border-gray-100"
+        transition={{ duration: 0.6 }}
       >
-        {/* Logo / Brand */}
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">🔗</span>
-          </div>
-          <h2 className="text-3xl font-extrabold text-blue-600 mb-2">
-            Url<span className="text-gray-900">Shorter</span>
-          </h2>
-          <p className="text-gray-600">
-            Welcome back! Please sign in to your account
-          </p>
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              disabled={loading}
-              required
-              aria-describedby="email-help"
-            />
-            <p id="email-help" className="text-xs text-gray-500 mt-1">
-              Enter the email address associated with your account
-            </p>
-          </div>
-
-          {/* Password */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-700 mb-2"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 bg-gray-50 focus:bg-white"
-                disabled={loading}
-                required
-                aria-describedby="password-help"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer text-lg select-none p-1 rounded-md hover:bg-gray-100 transition-colors"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                disabled={loading}
-              >
-                {showPassword ? "🙈" : "👁️"}
-              </button>
-            </div>
-            <p id="password-help" className="text-xs text-gray-500 mt-1">
-              Enter your account password
-            </p>
-          </div>
-
-          {/* Forgot Password */}
-          <div className="text-right">
-            <span
-              onClick={() => (window.location.href = "/forget-password")}
-              className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors"
-            >
-              Forgot Password?
-            </span>
-          </div>
-
-          {/* Submit */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            whileHover={{ scale: loading ? 1 : 1.02 }}
-            whileTap={{ scale: loading ? 1 : 0.98 }}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 disabled:cursor-not-allowed"
+        <div className="glass-card rounded-3xl p-8 shadow-2xl">
+          {/* Logo */}
+          <motion.div
+            className="text-center mb-8"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
           >
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Signing in...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
-              </>
-            )}
-          </motion.button>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl shadow-lg">
+                <ClockIcon className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold">
+                <span className="text-white">Clock</span>
+                <span className="bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                  Schedule
+                </span>
+              </h1>
+            </div>
+            <p className="text-gray-300">Welcome back! Please sign in to continue.</p>
+          </motion.div>
 
-          {/* Signup link */}
-          <div className="text-center pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{" "}
-              <span
-                onClick={() => (window.location.href = "/signup")}
-                className="text-blue-600 hover:text-blue-800 hover:underline font-semibold transition-colors"
+          <form onSubmit={handleLogin} className="space-y-6">
+            {/* Email Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <label className="form-label">
+                <UserIcon className="w-4 h-4 inline mr-2" />
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="form-input"
+                required
+              />
+            </motion.div>
+
+            {/* Password Field */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <label className="form-label">
+                <LockClosedIcon className="w-4 h-4 inline mr-2" />
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="form-input pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {showPassword ? (
+                    <EyeSlashIcon className="w-5 h-5" />
+                  ) : (
+                    <EyeIcon className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+            </motion.div>
+
+            {/* Forgot Password Link */}
+            <motion.div
+              className="text-right"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Link
+                to="/forget-password"
+                className="text-purple-300 hover:text-purple-200 text-sm transition-colors duration-200"
               >
-                Create Account
-              </span>
-            </p>
-          </div>
-        </form>
+                Forgot Password?
+              </Link>
+            </motion.div>
+
+            {/* Submit Button */}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
+            >
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="spinner"></div>
+                  Signing In...
+                </div>
+              ) : (
+                "Sign In"
+              )}
+            </motion.button>
+
+            {/* Sign Up Link */}
+            <motion.p
+              className="text-center text-gray-300"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-purple-300 hover:text-purple-200 font-medium transition-colors duration-200"
+              >
+                Sign Up
+              </Link>
+            </motion.p>
+          </form>
+        </div>
       </motion.div>
     </div>
   );
 };
+
 export default Login;
