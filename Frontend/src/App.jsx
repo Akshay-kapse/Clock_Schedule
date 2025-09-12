@@ -1,6 +1,8 @@
 import Navbar from "../src/components/Navbar.jsx";
 import Home from "../src/components/Home.jsx";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { ThemeProvider } from "./contexts/ThemeContext.jsx";
+import PageTransition from "./components/PageTransition.jsx";
 
 import Schedule from "../src/pages/Schedule.jsx";
 import Goals from "../src/pages/Goals.jsx";
@@ -15,6 +17,7 @@ import Hourschedule from "./pages/Hourschedule.jsx";
 import ForgotPassword from "./pages/Forgetpassword.jsx";
 import VerifyCode from "./pages/VerifyCode.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
+import { AnimatePresence } from "framer-motion";
 // import { Analytics } from "@vercel/analytics/react";
 
 function App() {
@@ -32,29 +35,33 @@ function App() {
     location.pathname.match(/^\/goalschedule\/[^/]+\/(day|hour)$/);
 
   return (
-    <div>
-      {!hideNavBar && <Navbar />}
+    <ThemeProvider>
+      <div>
+        {!hideNavBar && <Navbar />}
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forget-password" element={<ForgotPassword />} />
-        <Route path="/verify-code" element={<VerifyCode />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/goalschedule/:goalId/day" element={<Dayschedule />} />
-        <Route path="/goalschedule/:goalId/hour" element={<Hourschedule />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+            <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
+            <Route path="/forget-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
+            <Route path="/verify-code" element={<PageTransition><VerifyCode /></PageTransition>} />
+            <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+            <Route path="/home" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/schedule" element={<PageTransition><Schedule /></PageTransition>} />
+            <Route path="/goals" element={<PageTransition><Goals /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/goalschedule/:goalId/day" element={<PageTransition><Dayschedule /></PageTransition>} />
+            <Route path="/goalschedule/:goalId/hour" element={<PageTransition><Hourschedule /></PageTransition>} />
+            <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
 
-      <Toaster />
-      {/* <Analytics /> */}
-    </div>
+        <Toaster />
+        {/* <Analytics /> */}
+      </div>
+    </ThemeProvider>
   );
 }
 

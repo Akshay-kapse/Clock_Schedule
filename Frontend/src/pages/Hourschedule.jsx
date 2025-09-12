@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import {
   ClockIcon,
@@ -26,6 +28,7 @@ function Schedule() {
   const [endPeriod, setEndPeriod] = useState("AM");
   const [timeLeftForGoal, setTimeLeftForGoal] = useState("");
   const [completedTasks, setCompletedTasks] = useState([]);
+  const { themeClasses } = useTheme();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -272,7 +275,7 @@ const fetchSchedule = async () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -289,7 +292,7 @@ const fetchSchedule = async () => {
           {/* Back Button */}
           <motion.button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 mb-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all duration-300"
+            className={`flex items-center gap-2 mb-6 px-4 py-2 ${themeClasses.glass} border ${themeClasses.text} rounded-xl ${themeClasses.cardHover} transition-all duration-300`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -298,43 +301,46 @@ const fetchSchedule = async () => {
           </motion.button>
 
           {/* Header */}
-          <div className="text-center mb-8">
+          <ScrollAnimation>
+            <div className="text-center mb-8">
             <motion.div
               className="flex items-center justify-center gap-3 mb-4"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                <ClockIcon className="w-8 h-8 text-purple-300" />
+                <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                  <ClockIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 Hour Schedule
               </h1>
             </motion.div>
-            <div className="glass-card rounded-2xl p-4 mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">
-                Goal: <span className="text-purple-300">{goal}</span>
+            <div className={`${themeClasses.glass} rounded-2xl border p-4 mb-6 shadow-lg`}>
+              <h2 className={`text-xl font-semibold ${themeClasses.text} mb-2`}>
+                Goal: <span className={themeClasses.accent}>{goal}</span>
               </h2>
-              <p className="text-gray-300">
+              <p className={themeClasses.textSecondary}>
                 Target Date: {new Date(goalDate).toLocaleDateString()}
               </p>
               <p className="text-sm text-gray-400 mt-2">
                 Time Remaining: {timeLeftForGoal}
               </p>
             </div>
-          </div>
+            </div>
+          </ScrollAnimation>
 
           {/* Add Task Form */}
-          <motion.div
-            className="glass-card rounded-3xl p-6 sm:p-8 mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 mb-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
             <div className="flex items-center gap-3 mb-6">
-              <PlusIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">Add New Task</h2>
+              <PlusIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+              <h2 className={`text-xl font-semibold ${themeClasses.text}`}>Add New Task</h2>
             </div>
 
             <div className="space-y-6">
@@ -354,14 +360,14 @@ const fetchSchedule = async () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Start Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     Start Time
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={startHour}
                       onChange={(e) => setStartHour(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -378,7 +384,7 @@ const fetchSchedule = async () => {
                     <select
                       value={startMinute}
                       onChange={(e) => setStartMinute(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -393,7 +399,7 @@ const fetchSchedule = async () => {
                     <select
                       value={startPeriod}
                       onChange={(e) => setStartPeriod(e.target.value)}
-                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -407,14 +413,14 @@ const fetchSchedule = async () => {
 
                 {/* End Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     End Time
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={endHour}
                       onChange={(e) => setEndHour(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -431,7 +437,7 @@ const fetchSchedule = async () => {
                     <select
                       value={endMinute}
                       onChange={(e) => setEndMinute(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -446,7 +452,7 @@ const fetchSchedule = async () => {
                     <select
                       value={endPeriod}
                       onChange={(e) => setEndPeriod(e.target.value)}
-                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -475,7 +481,7 @@ const fetchSchedule = async () => {
               <motion.button
                 onClick={scheduleCreate}
                 disabled={loading}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`w-full px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
                 whileHover={{ scale: loading ? 1 : 1.02 }}
                 whileTap={{ scale: loading ? 1 : 0.98 }}
               >
@@ -492,18 +498,20 @@ const fetchSchedule = async () => {
                 )}
               </motion.button>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Schedule List */}
-          <motion.div
-            className="glass-card rounded-3xl p-6 sm:p-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
             <div className="flex items-center gap-3 mb-6">
-              <ClockIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">Hourly Tasks</h2>
+              <ClockIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+              <h2 className={`text-xl font-semibold ${themeClasses.text}`}>Hourly Tasks</h2>
               <span className="status-badge info">
                 {sortedSchedule.length} tasks
               </span>
@@ -517,8 +525,8 @@ const fetchSchedule = async () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <ClockIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg">
+                    <ClockIcon className={`w-16 h-16 ${themeClasses.textSecondary} opacity-50 mx-auto mb-4`} />
+                    <p className={`${themeClasses.textSecondary} text-lg`}>
                       No hourly tasks scheduled yet
                     </p>
                     <p className="text-gray-500 text-sm">
@@ -553,12 +561,13 @@ const fetchSchedule = async () => {
                               className={`font-medium text-lg ${
                                 task.completed
                                   ? "text-green-300 line-through"
-                                  : "text-white"
+                                  : themeClasses.text
                               }`}
                             >
                               {task.text}
                             </h3>
                             <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
+                            <div className={`flex items-center gap-4 mt-2 text-sm ${themeClasses.textSecondary}`}>
                               <span className="flex items-center gap-1">
                                 <ClockIcon className="w-4 h-4" />
                                 {formatTime(task.startTime)} -{" "}
@@ -605,7 +614,8 @@ const fetchSchedule = async () => {
                 )}
               </AnimatePresence>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
         </motion.div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext.jsx";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -18,6 +19,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { themeClasses } = useTheme();
   const navigate = useNavigate();
 
   // Handle scroll effect
@@ -62,8 +64,8 @@ const Navbar = () => {
     <motion.nav
       className={`fixed w-full top-0 left-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-lg border-b border-gray-200/20"
-          : "bg-white/95 backdrop-blur-sm shadow-md"
+          ? themeClasses.navbarScrolled
+          : themeClasses.navbar
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -81,8 +83,8 @@ const Navbar = () => {
               <ClockIcon className="w-6 h-6 text-white" />
             </div>
             <Link to="/home" className="text-xl lg:text-2xl font-bold">
-              <span className="text-gray-800">Clock</span>
-              <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
+              <span className={themeClasses.text}>Clock</span>
+              <span className="bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 Schedule
               </span>
             </Link>
@@ -99,11 +101,11 @@ const Navbar = () => {
               >
                 <Link
                   to={link.to}
-                  className="relative flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300 rounded-lg hover:bg-blue-50 group"
+                  className={`relative flex items-center gap-2 px-4 py-2 ${themeClasses.textSecondary} hover:${themeClasses.accent} font-medium transition-colors duration-300 rounded-lg ${themeClasses.cardHover} group`}
                 >
                   <link.icon className="w-4 h-4" />
                   {link.label}
-                  <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full group-hover:left-0 transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-purple-300 to-blue-300 group-hover:w-full group-hover:left-0 transition-all duration-300"></span>
                 </Link>
               </motion.div>
             ))}
@@ -128,7 +130,7 @@ const Navbar = () => {
               >
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  className={`flex items-center gap-2 px-6 py-2.5 ${themeClasses.button} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}
                 >
                   <UserPlusIcon className="w-4 h-4" />
                   Login
@@ -156,7 +158,7 @@ const Navbar = () => {
       <AnimatePresence>
         {show && (
           <motion.div
-            className="lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200/20 shadow-lg"
+            className={`lg:hidden ${themeClasses.navbar} border-t ${themeClasses.border} shadow-lg`}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -174,7 +176,7 @@ const Navbar = () => {
                     <Link
                       to={link.to}
                       onClick={() => setShow(false)}
-                      className="flex items-center gap-3 px-4 py-3 text-gray-800 hover:text-blue-600 font-medium transition-colors duration-300 rounded-lg hover:bg-blue-50"
+                      className={`flex items-center gap-3 px-4 py-3 ${themeClasses.text} hover:${themeClasses.accent} font-medium transition-colors duration-300 rounded-lg ${themeClasses.cardHover}`}
                     >
                       <link.icon className="w-5 h-5" />
                       {link.label}
@@ -183,7 +185,7 @@ const Navbar = () => {
                 ))}
                 
                 <motion.div
-                  className="pt-4 border-t border-gray-200"
+                  className={`pt-4 border-t ${themeClasses.border}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
@@ -200,7 +202,7 @@ const Navbar = () => {
                     <Link
                       to="/login"
                       onClick={() => setShow(false)}
-                      className="flex items-center gap-3 w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center"
+                      className={`flex items-center gap-3 w-full px-6 py-3 ${themeClasses.button} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center justify-center`}
                     >
                       <UserPlusIcon className="w-5 h-5" />
                       Login

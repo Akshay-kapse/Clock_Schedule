@@ -12,6 +12,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
 
 function Schedule() {
   const [schedule, setSchedule] = useState([]);
@@ -22,6 +24,7 @@ function Schedule() {
   const [endDate, setEndDate] = useState("");
   const [timeLeftForGoal, setTimeLeftForGoal] = useState("");
   const [completedTasks, setCompletedTasks] = useState([]);
+  const { themeClasses } = useTheme();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -204,7 +207,7 @@ function Schedule() {
   const formatDate = (date) => new Date(date).toLocaleDateString();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -221,7 +224,7 @@ function Schedule() {
           {/* Back Button */}
           <motion.button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 mb-6 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl hover:bg-white/20 transition-all duration-300"
+            className={`flex items-center gap-2 mb-6 px-4 py-2 ${themeClasses.glass} border ${themeClasses.text} rounded-xl ${themeClasses.cardHover} transition-all duration-300`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -230,225 +233,231 @@ function Schedule() {
           </motion.button>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <motion.div
-              className="flex items-center justify-center gap-3 mb-4"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                <CalendarDaysIcon className="w-8 h-8 text-purple-300" />
+          <ScrollAnimation>
+            <div className="text-center mb-8">
+              <motion.div
+                className="flex items-center justify-center gap-3 mb-4"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                  <CalendarDaysIcon className={`w-8 h-8 ${themeClasses.accent}`} />
+                </div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                  Day Schedule
+                </h1>
+              </motion.div>
+              <div className={`${themeClasses.glass} rounded-2xl border p-4 mb-6 shadow-lg`}>
+                <h2 className={`text-xl font-semibold ${themeClasses.text} mb-2`}>
+                  Goal: <span className={themeClasses.accent}>{goal}</span>
+                </h2>
+                <p className={themeClasses.textSecondary}>
+                  Target Date: {new Date(goalDate).toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-400 mt-2">
+                  Time Remaining: {timeLeftForGoal}
+                </p>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
-                Day Schedule
-              </h1>
-            </motion.div>
-            <div className="glass-card rounded-2xl p-4 mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">
-                Goal: <span className="text-purple-300">{goal}</span>
-              </h2>
-              <p className="text-gray-300">
-                Target Date: {new Date(goalDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Time Remaining: {timeLeftForGoal}
-              </p>
             </div>
-          </div>
+          </ScrollAnimation>
 
           {/* Add Task Form */}
-          <motion.div
-            className="glass-card rounded-3xl p-6 sm:p-8 mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <PlusIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">Add New Task</h2>
-            </div>
-
-            <div className="space-y-6">
-              {/* Task Input */}
-              <div>
-                <label className="form-label">Task Description</label>
-                <input
-                  type="text"
-                  placeholder="Enter task name..."
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  className="form-input"
-                />
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 mb-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <PlusIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+                <h2 className={`text-xl font-semibold ${themeClasses.text}`}>Add New Task</h2>
               </div>
 
-              {/* Date Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-6">
+                {/* Task Input */}
                 <div>
-                  <label className="form-label">Start Date</label>
+                  <label className="form-label">Task Description</label>
                   <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    type="text"
+                    placeholder="Enter task name..."
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
                     className="form-input"
                   />
                 </div>
-                <div>
-                  <label className="form-label">End Date</label>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="form-input"
-                  />
+
+                {/* Date Inputs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="form-label">Start Date</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label">End Date</label>
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Error Message */}
-              {error && (
-                <motion.div
-                  className="flex items-center gap-2 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                >
-                  <ExclamationTriangleIcon className="w-5 h-5" />
-                  <span>{error}</span>
-                </motion.div>
-              )}
-
-              {/* Add Button */}
-              <motion.button
-                onClick={scheduleCreate}
-                disabled={loading}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                whileHover={{ scale: loading ? 1 : 1.02 }}
-                whileTap={{ scale: loading ? 1 : 0.98 }}
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="spinner"></div>
-                    Adding Task...
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <PlusIcon className="w-5 h-5" />
-                    Add Task
-                  </div>
+                {/* Error Message */}
+                {error && (
+                  <motion.div
+                    className="flex items-center gap-2 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    <ExclamationTriangleIcon className="w-5 h-5" />
+                    <span>{error}</span>
+                  </motion.div>
                 )}
-              </motion.button>
-            </div>
-          </motion.div>
+
+                {/* Add Button */}
+                <motion.button
+                  onClick={scheduleCreate}
+                  disabled={loading}
+                  className={`w-full px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  whileHover={{ scale: loading ? 1 : 1.02 }}
+                  whileTap={{ scale: loading ? 1 : 0.98 }}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="spinner"></div>
+                      Adding Task...
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-2">
+                      <PlusIcon className="w-5 h-5" />
+                      Add Task
+                    </div>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Schedule List */}
-          <motion.div
-            className="glass-card rounded-3xl p-6 sm:p-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <CalendarDaysIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">Daily Tasks</h2>
-              <span className="status-badge info">{schedule.length} tasks</span>
-            </div>
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <CalendarDaysIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+                <h2 className={`text-xl font-semibold ${themeClasses.text}`}>Daily Tasks</h2>
+                <span className="status-badge info">{schedule.length} tasks</span>
+              </div>
 
-            <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
-              <AnimatePresence>
-                {schedule.length === 0 ? (
-                  <motion.div
-                    className="text-center py-12"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
-                    <CalendarDaysIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg">
-                      No daily tasks scheduled yet
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Add your first task to get started!
-                    </p>
-                  </motion.div>
-                ) : (
-                  schedule.map((task, index) => {
-                    if (!task || task.completed === undefined) return null;
+              <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+                <AnimatePresence>
+                  {schedule.length === 0 ? (
+                    <motion.div
+                      className="text-center py-12"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      <CalendarDaysIcon className={`w-16 h-16 ${themeClasses.textSecondary} opacity-50 mx-auto mb-4`} />
+                      <p className={`${themeClasses.textSecondary} text-lg`}>
+                        No daily tasks scheduled yet
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        Add your first task to get started!
+                      </p>
+                    </motion.div>
+                  ) : (
+                    schedule.map((task, index) => {
+                      if (!task || task.completed === undefined) return null;
 
-                    const isOverdue = new Date(task.endDate) < new Date();
+                      const isOverdue = new Date(task.endDate) < new Date();
 
-                    return (
-                      <motion.div
-                        key={task._id}
-                        className={`p-4 rounded-2xl border transition-all duration-300 ${
-                          task.completed
-                            ? "bg-green-500/20 border-green-500/30"
-                            : isOverdue
-                            ? "bg-red-500/20 border-red-500/30"
-                            : "bg-white/10 border-white/20 hover:bg-white/20"
-                        }`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ delay: index * 0.1 }}
-                        layout
-                      >
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <h3
-                              className={`font-medium text-lg ${
-                                task.completed
-                                  ? "text-green-300 line-through"
-                                  : "text-white"
-                              }`}
-                            >
-                              {task.text}
-                            </h3>
-                            <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
-                              <span className="flex items-center gap-1">
-                                <CalendarDaysIcon className="w-4 h-4" />
-                                {formatDate(task.startDate)} -{" "}
-                                {formatDate(task.endDate)}
-                              </span>
-                              <span
-                                className={`status-badge ${
-                                  isOverdue ? "error" : "info"
+                      return (
+                        <motion.div
+                          key={task._id}
+                          className={`p-4 rounded-2xl border transition-all duration-300 ${
+                            task.completed
+                              ? "bg-green-500/20 border-green-500/30"
+                              : isOverdue
+                              ? "bg-red-500/20 border-red-500/30"
+                              : "bg-white/10 border-white/20 hover:bg-white/20"
+                          }`}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ delay: index * 0.1 }}
+                          layout
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex-1">
+                              <h3
+                                className={`font-medium text-lg ${
+                                  task.completed
+                                    ? "text-green-300 line-through"
+                                    : themeClasses.text
                                 }`}
                               >
-                                {isOverdue ? "Overdue" : "Active"}
-                              </span>
+                                {task.text}
+                              </h3>
+                              <div className={`flex items-center gap-4 mt-2 text-sm ${themeClasses.textSecondary}`}>
+                                <span className="flex items-center gap-1">
+                                  <CalendarDaysIcon className="w-4 h-4" />
+                                  {formatDate(task.startDate)} -{" "}
+                                  {formatDate(task.endDate)}
+                                </span>
+                                <span
+                                  className={`status-badge ${
+                                    isOverdue ? "error" : "info"
+                                  }`}
+                                >
+                                  {isOverdue ? "Overdue" : "Active"}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <motion.button
+                                onClick={() => toggleCompleteStatus(task._id)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                                  task.completed
+                                    ? "bg-green-500/30 text-green-300 hover:bg-green-500/40"
+                                    : "bg-blue-500/30 text-blue-300 hover:bg-blue-500/40"
+                                }`}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <CheckCircleIcon className="w-4 h-4" />
+                                {task.completed ? "Completed" : "Mark Done"}
+                              </motion.button>
+
+                              <motion.button
+                                onClick={() => deleteTask(task._id)}
+                                className="p-2 bg-red-500/30 text-red-300 hover:bg-red-500/40 rounded-xl transition-all duration-300"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                <TrashIcon className="w-4 h-4" />
+                              </motion.button>
                             </div>
                           </div>
-
-                          <div className="flex items-center gap-2">
-                            <motion.button
-                              onClick={() => toggleCompleteStatus(task._id)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
-                                task.completed
-                                  ? "bg-green-500/30 text-green-300 hover:bg-green-500/40"
-                                  : "bg-blue-500/30 text-blue-300 hover:bg-blue-500/40"
-                              }`}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <CheckCircleIcon className="w-4 h-4" />
-                              {task.completed ? "Completed" : "Mark Done"}
-                            </motion.button>
-
-                            <motion.button
-                              onClick={() => deleteTask(task._id)}
-                              className="p-2 bg-red-500/30 text-red-300 hover:bg-red-500/40 rounded-xl transition-all duration-300"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <TrashIcon className="w-4 h-4" />
-                            </motion.button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
+                        </motion.div>
+                      );
+                    })
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </ScrollAnimation>
         </motion.div>
       </div>
     </div>

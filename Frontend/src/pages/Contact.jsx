@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { toast, ToastContainer } from "react-toastify";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
 import {
   PhoneIcon,
   EnvelopeIcon,
@@ -23,6 +25,7 @@ const ContactPage = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { themeClasses } = useTheme();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,7 +114,7 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -126,7 +129,8 @@ const ContactPage = () => {
           transition={{ duration: 0.6 }}
         >
           {/* Header */}
-          <div className="text-center mb-16">
+          <ScrollAnimation>
+            <div className="text-center mb-16">
             <motion.div
               className="flex items-center justify-center gap-3 mb-6"
               initial={{ scale: 0.8, opacity: 0 }}
@@ -140,49 +144,55 @@ const ContactPage = () => {
                 Get In Touch
               </h1>
             </motion.div>
-            <p className="text-gray-300 text-lg sm:text-xl max-w-3xl mx-auto">
+            <p className={`${themeClasses.textSecondary} text-lg sm:text-xl max-w-3xl mx-auto`}>
               Have questions about ClockSchedule? Need help with time management? 
               We're here to help you succeed.
             </p>
           </div>
+            </div>
+          </ScrollAnimation>
 
           {/* Contact Info Cards */}
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <ScrollAnimation>
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
             {contactInfo.map((info, index) => (
               <motion.div
                 key={info.title}
-                className="glass-card rounded-2xl p-6 text-center card-hover"
+                className={`${themeClasses.glass} rounded-2xl border p-6 text-center card-hover shadow-lg`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1 }}
               >
-                <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${info.color} mb-4`}>
-                  <info.icon className="w-6 h-6 text-white" />
+                <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                  <PhoneIcon className={`w-8 h-8 ${themeClasses.accent}`} />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">{info.title}</h3>
-                <p className="text-purple-300 font-medium mb-1">{info.value}</p>
-                <p className="text-gray-400 text-sm">{info.description}</p>
+                <h3 className={`text-xl font-semibold ${themeClasses.text} mb-2`}>{info.title}</h3>
+                <p className={`${themeClasses.accent} font-medium mb-1`}>{info.value}</p>
+                <p className={`${themeClasses.textSecondary} text-sm`}>{info.description}</p>
               </motion.div>
             ))}
           </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <motion.div
-              className="glass-card rounded-3xl p-8"
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-            >
+            <ScrollAnimation>
+              <motion.div
+                className={`${themeClasses.glass} rounded-3xl border p-8 shadow-2xl`}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+              >
               <div className="flex items-center gap-3 mb-8">
-                <PaperAirplaneIcon className="w-6 h-6 text-purple-300" />
-                <h2 className="text-2xl font-bold text-white">Send us a Message</h2>
+                <PaperAirplaneIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+                <h2 className={`text-2xl font-bold ${themeClasses.text}`}>Send us a Message</h2>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -290,7 +300,7 @@ const ContactPage = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`w-full px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
                   whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                   whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                 >
@@ -307,19 +317,21 @@ const ContactPage = () => {
                   )}
                 </motion.button>
               </form>
-            </motion.div>
+              </motion.div>
+            </ScrollAnimation>
 
             {/* Additional Info */}
-            <motion.div
-              className="space-y-8"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
+            <ScrollAnimation>
+              <motion.div
+                className="space-y-8"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
               {/* Why Contact Us */}
-              <div className="glass-card rounded-2xl p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Why Contact Us?</h3>
-                <ul className="space-y-3 text-gray-300">
+              <div className={`${themeClasses.glass} rounded-2xl border p-6 shadow-lg`}>
+                <h3 className={`text-xl font-semibold ${themeClasses.text} mb-4`}>Why Contact Us?</h3>
+                <ul className={`space-y-3 ${themeClasses.textSecondary}`}>
                   <li className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
                     <span>Get personalized time management advice</span>
@@ -340,49 +352,50 @@ const ContactPage = () => {
               </div>
 
               {/* Response Time */}
-              <div className="glass-card rounded-2xl p-6">
-                <h3 className="text-xl font-semibold text-white mb-4">Response Time</h3>
+              <div className={`${themeClasses.glass} rounded-2xl border p-6 shadow-lg`}>
+                <h3 className={`text-xl font-semibold ${themeClasses.text} mb-4`}>Response Time</h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                     <div>
-                      <p className="text-white font-medium">Email Inquiries</p>
-                      <p className="text-gray-400 text-sm">Within 24 hours</p>
+                      <p className={`${themeClasses.text} font-medium`}>Email Inquiries</p>
+                      <p className={`${themeClasses.textSecondary} text-sm`}>Within 24 hours</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                     <div>
-                      <p className="text-white font-medium">Technical Support</p>
-                      <p className="text-gray-400 text-sm">Within 48 hours</p>
+                      <p className={`${themeClasses.text} font-medium`}>Technical Support</p>
+                      <p className={`${themeClasses.textSecondary} text-sm`}>Within 48 hours</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                     <div>
-                      <p className="text-white font-medium">Partnership Inquiries</p>
-                      <p className="text-gray-400 text-sm">Within 3-5 business days</p>
+                      <p className={`${themeClasses.text} font-medium`}>Partnership Inquiries</p>
+                      <p className={`${themeClasses.textSecondary} text-sm`}>Within 3-5 business days</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* FAQ Link */}
-              <div className="glass-card rounded-2xl p-6 text-center">
-                <h3 className="text-xl font-semibold text-white mb-3">Need Quick Answers?</h3>
-                <p className="text-gray-300 mb-4">
+              <div className={`${themeClasses.glass} rounded-2xl border p-6 text-center shadow-lg`}>
+                <h3 className={`text-xl font-semibold ${themeClasses.text} mb-3`}>Need Quick Answers?</h3>
+                <p className={`${themeClasses.textSecondary} mb-4`}>
                   Check out our frequently asked questions for instant solutions.
                 </p>
                 <motion.a
                   href="/about"
-                  className="btn-secondary inline-flex items-center gap-2"
+                  className={`${themeClasses.bgSecondary} backdrop-blur-md border ${themeClasses.border} ${themeClasses.text} font-semibold rounded-xl px-6 py-3 ${themeClasses.cardHover} transition-all duration-300 inline-flex items-center gap-2`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   Learn More About Us
                 </motion.a>
               </div>
-            </motion.div>
+              </motion.div>
+            </ScrollAnimation>
           </div>
         </motion.div>
       </div>
@@ -397,7 +410,7 @@ const ContactPage = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+      theme={themeClasses.theme === 'light' ? 'light' : 'dark'}
       />
     </div>
   );

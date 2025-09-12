@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
 
 import {
   ArrowLeftIcon,
@@ -28,6 +30,7 @@ const GoalPage = () => {
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { themeClasses } = useTheme();
 
   const navigate = useNavigate();
 
@@ -185,7 +188,7 @@ const GoalPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -211,7 +214,7 @@ const GoalPage = () => {
 
           {isAddingGoal ? (
             <motion.div
-              className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6 sm:p-8 shadow-2xl"
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 shadow-2xl`}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -226,10 +229,10 @@ const GoalPage = () => {
                   <ArrowLeftIcon className="w-5 h-5 text-white" />
                 </motion.button>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-500/30 rounded-xl">
-                    <TbTarget className="w-6 h-6 text-purple-300" />
+                  <div className={`p-2 ${themeClasses.bgSecondary} rounded-xl`}>
+                    <TbTarget className={`w-6 h-6 ${themeClasses.accent}`} />
                   </div>
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className={`text-2xl font-bold ${themeClasses.text}`}>
                     {isEditing ? "Edit Goal" : "Create New Goal"}
                   </h2>
                 </div>
@@ -237,28 +240,28 @@ const GoalPage = () => {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     Goal Description
                   </label>
                   <input
                     type="text"
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="form-input"
                     placeholder="E.g., Learn React Development"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     Target Date
                   </label>
                   <input
                     type="date"
                     value={goalDate}
                     onChange={(e) => setGoalDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                    className="form-input"
                     required
                   />
                 </div>
@@ -266,7 +269,7 @@ const GoalPage = () => {
                 <motion.button
                   type="submit"
                   disabled={loading}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`w-full px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -287,30 +290,33 @@ const GoalPage = () => {
           ) : (
             <div className="space-y-8">
               {/* Header */}
-              <div className="text-center">
+              <ScrollAnimation>
+                <div className="text-center">
                 <motion.div
                   className="flex items-center justify-center gap-3 mb-4"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                    <TbTarget className="w-8 h-8 text-purple-300" />
+                  <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                    <TbTarget className={`w-8 h-8 ${themeClasses.accent}`} />
                   </div>
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                     Your Goals
                   </h1>
                 </motion.div>
-                <p className="text-gray-300 text-lg">Set targets and achieve your dreams</p>
-              </div>
+                <p className={`${themeClasses.textSecondary} text-lg`}>Set targets and achieve your dreams</p>
+                </div>
+              </ScrollAnimation>
 
               {/* Goals List */}
-              <motion.div
-                className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6 sm:p-8 shadow-2xl"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
+              <ScrollAnimation>
+                <motion.div
+                  className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 shadow-2xl`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
                 {loading ? (
                   <div className="text-center py-12">
                     <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
@@ -318,9 +324,9 @@ const GoalPage = () => {
                   </div>
                 ) : goalsList.length === 0 ? (
                   <div className="text-center py-12">
-                    <TbTarget className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg mb-2">No goals yet</p>
-                    <p className="text-gray-500 text-sm">Create your first goal to get started!</p>
+                    <TbTarget className={`w-16 h-16 ${themeClasses.textSecondary} opacity-50 mx-auto mb-4`} />
+                    <p className={`${themeClasses.textSecondary} text-lg mb-2`}>No goals yet</p>
+                    <p className={`${themeClasses.textSecondary} opacity-70 text-sm`}>Create your first goal to get started!</p>
                   </div>
                 ) : (
                   <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
@@ -345,10 +351,10 @@ const GoalPage = () => {
                           >
                             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                               <div className="flex-1">
-                                <h3 className="text-xl font-semibold text-white mb-2">
+                                <h3 className={`text-xl font-semibold ${themeClasses.text} mb-2`}>
                                   {goalItem.goal}
                                 </h3>
-                                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                                <div className={`flex flex-wrap items-center gap-4 text-sm ${themeClasses.textSecondary}`}>
                                   <span className="flex items-center gap-1">
                                     <CalendarIcon className="w-4 h-4" />
                                     {new Date(goalItem.goalDate).toLocaleDateString("en-GB")}
@@ -411,7 +417,7 @@ const GoalPage = () => {
 
                 <motion.button
                   onClick={() => setIsAddingGoal(true)}
-                  className="w-full mt-6 px-6 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  className={`w-full mt-6 px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -420,7 +426,8 @@ const GoalPage = () => {
                     Add New Goal
                   </div>
                 </motion.button>
-              </motion.div>
+                </motion.div>
+              </ScrollAnimation>
             </div>
           )}
 
@@ -434,7 +441,7 @@ const GoalPage = () => {
                 exit={{ opacity: 0 }}
               >
                 <motion.div
-                  className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6 sm:p-8 w-full max-w-md shadow-2xl"
+                  className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 w-full max-w-md shadow-2xl`}
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -449,7 +456,7 @@ const GoalPage = () => {
                     >
                       <ArrowLeftIcon className="w-5 h-5 text-white" />
                     </motion.button>
-                    <h2 className="text-xl font-bold text-white">Choose Schedule Type</h2>
+                    <h2 className={`text-xl font-bold ${themeClasses.text}`}>Choose Schedule Type</h2>
                   </div>
 
                   <div className="space-y-4">
@@ -494,7 +501,7 @@ const GoalPage = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme={themeClasses.theme === 'light' ? 'light' : 'dark'}
       />
     </div>
   );

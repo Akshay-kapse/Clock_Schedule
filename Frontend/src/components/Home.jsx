@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext.jsx";
 import {
   SunIcon,
   MoonIcon,
@@ -14,9 +15,9 @@ import { TbTarget } from "react-icons/tb";
 export default function Home() {
   const [time, setTime] = useState(new Date());
   const [is24Hour, setIs24Hour] = useState(false);
-  const [theme, setTheme] = useState("dark");
   const [clockStyle, setClockStyle] = useState("all"); // 'all', 'analog', 'digital'
   const [showClockSettings, setShowClockSettings] = useState(false);
+  const { theme, setTheme, themeClasses } = useTheme();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,10 +25,6 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
 
   const toggleFormat = () => setIs24Hour((prev) => !prev);
 
@@ -97,45 +94,7 @@ export default function Home() {
     },
   ];
 
-  const getThemeClasses = () => {
-    switch (theme) {
-      case "light":
-        return {
-          bg: "bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100",
-          text: "text-gray-900",
-          card: "bg-white/80 backdrop-blur-md border-gray-200/30",
-          accent: "text-blue-600",
-        };
-      case "purple":
-        return {
-          bg: "bg-gradient-to-br from-purple-900 via-indigo-900 to-pink-900",
-          text: "text-purple-100",
-          card: "bg-purple-800/20 backdrop-blur-md border-purple-500/30",
-          accent: "text-purple-300",
-        };
-      default: // dark
-        return {
-          bg: "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900",
-          text: "text-white",
-          card: "bg-white/10 backdrop-blur-md border-white/20",
-          accent: "text-purple-300",
-        };
-    }
-  };
-
-  const themeClasses = getThemeClasses();
-
   return (
-    // <div
-    //   className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}
-    // >
-    //   {/* Background Elements */}
-    //   <div className="absolute inset-0 overflow-hidden">
-    //     <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-    //     <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-    //     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-float"></div>
-    //   </div>
-
     <div
       className={`min-h-screen relative ${themeClasses.bg} pt-20 transition-all duration-500`}
     >

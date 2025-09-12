@@ -12,10 +12,13 @@ import { DiJavascript1, DiNodejsSmall } from "react-icons/di";
 import { SiTailwindcss, SiExpress } from "react-icons/si";
 import { FaReact } from "react-icons/fa";
 import { SiMongodb } from "react-icons/si";
-import ScrollAnimation from "../components/ScrollAnimation";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
+import { useTheme } from "../contexts/ThemeContext.jsx";
 import { motion } from "framer-motion";
 
 const AboutPage = () => {
+  const { themeClasses } = useTheme();
+
   const features = [
     {
       icon: ClockIcon,
@@ -88,7 +91,7 @@ const AboutPage = () => {
   ];
 
   return (
-       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Gradient Circles */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -108,22 +111,20 @@ const AboutPage = () => {
             <motion.div
               className="flex items-center justify-center gap-3 mb-6"
               initial={{ scale: 0.8, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                <LightBulbIcon className="w-8 h-8 text-purple-300" />
+              <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                <LightBulbIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 About ClockSchedule
               </h1>
             </motion.div>
             <motion.p
-              className="text-gray-300 text-lg sm:text-xl max-w-3xl mx-auto"
+              className={`${themeClasses.textSecondary} text-lg sm:text-xl max-w-3xl mx-auto`}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               Empowering individuals to master their time through intelligent
@@ -132,15 +133,15 @@ const AboutPage = () => {
           </div>
 
           {/* Mission */}
-          <motion.div
-            className="glass-card rounded-3xl p-8 sm:p-12 mb-16 text-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="text-3xl font-bold text-white mb-6">Our Mission</h2>
-            <p className="text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto">
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-8 sm:p-12 mb-16 text-center shadow-2xl`}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+            <h2 className={`text-3xl font-bold ${themeClasses.text} mb-6`}>Our Mission</h2>
+            <p className={`${themeClasses.textSecondary} text-lg leading-relaxed max-w-4xl mx-auto`}>
               At ClockSchedule, we believe that effective time management is the
               foundation of success. Our mission is to provide intuitive,
               powerful tools that help individuals organize their time, achieve
@@ -148,27 +149,27 @@ const AboutPage = () => {
               beautiful design with practical functionality to create an
               experience that users love.
             </p>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Features */}
-          <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <ScrollAnimation>
+            <motion.div
+              className="mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+            <h2 className={`text-3xl font-bold ${themeClasses.text} text-center mb-12`}>
               Key Features
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
-                  className="glass-card rounded-2xl p-6 card-hover"
+                  className={`${themeClasses.glass} rounded-2xl border p-6 card-hover shadow-lg`}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                 >
                   <div
@@ -176,26 +177,28 @@ const AboutPage = () => {
                   >
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-3">
+                  <h3 className={`text-xl font-semibold ${themeClasses.text} mb-3`}>
                     {feature.title}
                   </h3>
                   <p className="text-gray-300 leading-relaxed">
+                  <p className={`${themeClasses.textSecondary} leading-relaxed`}>
                     {feature.description}
                   </p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Timeline */}
-          <motion.div
-            className="mb-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <h2 className="text-3xl font-bold text-white text-center mb-12">
+          <ScrollAnimation>
+            <motion.div
+              className="mb-16"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+            <h2 className={`text-3xl font-bold ${themeClasses.text} text-center mb-12`}>
               Our Journey
             </h2>
             <div className="relative">
@@ -204,7 +207,7 @@ const AboutPage = () => {
                 {timeline.map((item, index) => (
                   <motion.div
                     key={item.year}
-                    className={`relative flex items-center ${
+                    className={`${themeClasses.glass} rounded-2xl border p-6 ml-16 md:ml-0 shadow-lg ${
                       index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                     }`}
                     initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
@@ -225,41 +228,42 @@ const AboutPage = () => {
                           {item.year}
                         </span>
                       </div>
-                      <h3 className="text-xl font-semibold text-white mb-2">
+                      <h3 className={`text-xl font-semibold ${themeClasses.text} mb-2`}>
                         {item.title}
                       </h3>
                       <p className="text-gray-300">{item.description}</p>
+                      <p className={themeClasses.textSecondary}>{item.description}</p>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Technologies */}
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <h2 className="text-3xl font-bold text-white mb-12">
+          <ScrollAnimation>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+            <h2 className={`text-3xl font-bold ${themeClasses.text} mb-12`}>
               Built With Modern Technologies
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
               {technologies.map((tech, index) => (
                 <motion.div
                   key={tech.name}
-                  className="glass-card rounded-2xl p-6 card-hover flex flex-col items-center"
+                  className={`${themeClasses.glass} rounded-2xl border p-6 card-hover flex flex-col items-center shadow-lg`}
                   initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                 >
                   {tech.isComponent ? (
-                    <tech.logo className="w-12 h-12 mb-3 text-white" />
+                    <tech.logo className={`w-12 h-12 mb-3 ${themeClasses.text}`} />
                   ) : (
                     <img
                       src={tech.logo}
@@ -267,25 +271,28 @@ const AboutPage = () => {
                       className="w-12 h-12 mb-3 filter brightness-0 invert"
                     />
                   )}
-                  <p className="text-white font-medium text-sm">{tech.name}</p>
+                  <p className={`${themeClasses.text} font-medium text-sm`}>{tech.name}</p>
                 </motion.div>
               ))}
             </div>
           </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Call to Action */}
-          <motion.div
-            className="text-center mt-16"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="glass-card rounded-3xl p-8 sm:p-12">
-              <h2 className="text-3xl font-bold text-white mb-6">
+          <ScrollAnimation>
+            <motion.div
+              className="text-center mt-16"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+            <div className={`${themeClasses.glass} rounded-3xl border p-8 sm:p-12 shadow-2xl`}>
+              <h2 className={`text-3xl font-bold ${themeClasses.text} mb-6`}>
                 Ready to Master Your Time?
               </h2>
               <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+              <p className={`${themeClasses.textSecondary} text-lg mb-8 max-w-2xl mx-auto`}>
                 Join thousands of users who have transformed their productivity
                 with ClockSchedule. Start organizing your time and achieving
                 your goals today.
@@ -293,7 +300,7 @@ const AboutPage = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.a
                   href="/goals"
-                  className="btn-primary"
+                  className={`px-6 py-3 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -301,7 +308,7 @@ const AboutPage = () => {
                 </motion.a>
                 <motion.a
                   href="/schedule"
-                  className="btn-secondary"
+                  className={`px-6 py-3 ${themeClasses.bgSecondary} backdrop-blur-md border ${themeClasses.border} ${themeClasses.text} font-semibold rounded-xl ${themeClasses.cardHover} transition-all duration-300`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -309,7 +316,8 @@ const AboutPage = () => {
                 </motion.a>
               </div>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
         </motion.div>
       </div>
     </div>

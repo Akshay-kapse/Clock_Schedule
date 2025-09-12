@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import ScrollAnimation from "../components/ScrollAnimation.jsx";
 import {
   ClockIcon,
   PlusIcon,
@@ -23,6 +25,7 @@ function Schedule() {
   const [endHour, setEndHour] = useState("12");
   const [endMinute, setEndMinute] = useState("00");
   const [endPeriod, setEndPeriod] = useState("AM");
+  const { themeClasses } = useTheme();
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem("schedule");
@@ -254,7 +257,7 @@ function Schedule() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
+    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -269,41 +272,44 @@ function Schedule() {
           transition={{ duration: 0.6 }}
         >
           {/* Header */}
-          <div className="text-center mb-8">
+          <ScrollAnimation>
+            <div className="text-center mb-8">
             <motion.div
               className="flex items-center justify-center gap-3 mb-4"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                <CalendarDaysIcon className="w-8 h-8 text-purple-300" />
+              <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                <CalendarDaysIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
                 Your Schedule
               </h1>
             </motion.div>
-            <p className="text-gray-300 text-lg">
+            <p className={`${themeClasses.textSecondary} text-lg`}>
               Manage your daily tasks and stay organized
             </p>
-          </div>
+            </div>
+          </ScrollAnimation>
 
           {/* Add Task Form */}
-          <motion.div
-            className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6 sm:p-8 mb-8 shadow-2xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 mb-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
             <div className="flex items-center gap-3 mb-6">
-              <PlusIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">Add New Task</h2>
+              <PlusIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+              <h2 className={`text-xl font-semibold ${themeClasses.text}`}>Add New Task</h2>
             </div>
 
             <div className="space-y-6">
               {/* Task Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2`}>
                   Task Description
                 </label>
                 <input
@@ -311,7 +317,7 @@ function Schedule() {
                   placeholder="Enter your task..."
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                  className="form-input"
                 />
               </div>
 
@@ -319,14 +325,14 @@ function Schedule() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Start Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     Start Time
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={startHour}
                       onChange={(e) => setStartHour(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -343,7 +349,7 @@ function Schedule() {
                     <select
                       value={startMinute}
                       onChange={(e) => setStartMinute(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -358,7 +364,7 @@ function Schedule() {
                     <select
                       value={startPeriod}
                       onChange={(e) => setStartPeriod(e.target.value)}
-                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -372,14 +378,14 @@ function Schedule() {
 
                 {/* End Time */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="form-label">
                     End Time
                   </label>
                   <div className="flex gap-2">
                     <select
                       value={endHour}
                       onChange={(e) => setEndHour(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 12 }, (_, i) => i + 1).map(
                         (hour) => (
@@ -396,7 +402,7 @@ function Schedule() {
                     <select
                       value={endMinute}
                       onChange={(e) => setEndMinute(e.target.value)}
-                      className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input flex-1"
                     >
                       {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
                         <option
@@ -411,7 +417,7 @@ function Schedule() {
                     <select
                       value={endPeriod}
                       onChange={(e) => setEndPeriod(e.target.value)}
-                      className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="form-input"
                     >
                       <option value="AM" className="bg-gray-800">
                         AM
@@ -440,7 +446,7 @@ function Schedule() {
               <motion.button
                 onClick={scheduleCreate}
                 disabled={loading}
-                className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`w-full px-6 py-4 ${themeClasses.button} ${themeClasses.buttonHover} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -457,18 +463,20 @@ function Schedule() {
                 )}
               </motion.button>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Schedule List */}
-          <motion.div
-            className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6 sm:p-8 shadow-2xl"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
+          <ScrollAnimation>
+            <motion.div
+              className={`${themeClasses.glass} rounded-3xl border p-6 sm:p-8 shadow-2xl`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
             <div className="flex items-center gap-3 mb-6">
-              <ClockIcon className="w-6 h-6 text-purple-300" />
-              <h2 className="text-xl font-semibold text-white">
+              <ClockIcon className={`w-6 h-6 ${themeClasses.accent}`} />
+              <h2 className={`text-xl font-semibold ${themeClasses.text}`}>
                 Today's Tasks
               </h2>
               <span className="px-3 py-1 bg-purple-500/30 text-purple-200 rounded-full text-sm font-medium">
@@ -484,8 +492,8 @@ function Schedule() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <CalendarDaysIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg">
+                    <CalendarDaysIcon className={`w-16 h-16 ${themeClasses.textSecondary} opacity-50 mx-auto mb-4`} />
+                    <p className={`${themeClasses.textSecondary} text-lg`}>
                       No tasks scheduled yet
                     </p>
                     <p className="text-gray-500 text-sm">
@@ -520,12 +528,12 @@ function Schedule() {
                               className={`font-medium text-lg ${
                                 task.completed
                                   ? "text-green-300 line-through"
-                                  : "text-white"
+                                  : themeClasses.text
                               }`}
                             >
                               {task.text}
                             </h3>
-                            <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
+                            <div className={`flex items-center gap-4 mt-2 text-sm ${themeClasses.textSecondary}`}>
                               <span className="flex items-center gap-1">
                                 <ClockIcon className="w-4 h-4" />
                                 {formatTime(task.startTime)} -{" "}
@@ -574,7 +582,8 @@ function Schedule() {
                 )}
               </AnimatePresence>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
         </motion.div>
       </div>
 
@@ -588,7 +597,7 @@ function Schedule() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme={theme === 'light' ? 'light' : 'dark'}
       />
     </div>
   );
