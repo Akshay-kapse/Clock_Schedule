@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/userpassword/forgot-password`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/userpassword/forgot-password`,
         { email }
       );
       setMessage(res.data.message);

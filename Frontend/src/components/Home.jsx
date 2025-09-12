@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  SunIcon, 
-  MoonIcon, 
+import {
+  SunIcon,
+  MoonIcon,
   SwatchIcon,
   CalendarDaysIcon,
   ClockIcon,
-  TargetIcon,
   ChartBarIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+import { TbTarget } from "react-icons/tb";
 
 export default function Home() {
   const [time, setTime] = useState(new Date());
   const [is24Hour, setIs24Hour] = useState(false);
-  const [theme, setTheme] = useState('dark');
-  const [clockStyle, setClockStyle] = useState('all'); // 'all', 'analog', 'digital'
+  const [theme, setTheme] = useState("dark");
+  const [clockStyle, setClockStyle] = useState("all"); // 'all', 'analog', 'digital'
   const [showClockSettings, setShowClockSettings] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   const toggleFormat = () => setIs24Hour((prev) => !prev);
@@ -37,45 +37,88 @@ export default function Home() {
   const ampm = time.getHours() >= 12 ? "PM" : "AM";
 
   const themes = [
-    { id: 'light', name: 'Light', icon: SunIcon, gradient: 'from-blue-400 to-purple-500' },
-    { id: 'dark', name: 'Dark', icon: MoonIcon, gradient: 'from-purple-500 to-pink-500' },
-    { id: 'purple', name: 'Purple', icon: SwatchIcon, gradient: 'from-indigo-500 to-purple-600' }
+    {
+      id: "light",
+      name: "Light",
+      icon: SunIcon,
+      gradient: "from-blue-400 to-purple-500",
+    },
+    {
+      id: "dark",
+      name: "Dark",
+      icon: MoonIcon,
+      gradient: "from-purple-500 to-pink-500",
+    },
+    {
+      id: "purple",
+      name: "Purple",
+      icon: SwatchIcon,
+      gradient: "from-indigo-500 to-purple-600",
+    },
   ];
 
   const clockStyles = [
-    { id: 'all', name: 'All Clocks', description: 'Show all clock widgets' },
-    { id: 'analog', name: 'Analog Only', description: 'Show only analog clock' },
-    { id: 'digital', name: 'Digital Only', description: 'Show only digital clock' }
+    { id: "all", name: "All Clocks", description: "Show all clock widgets" },
+    {
+      id: "analog",
+      name: "Analog Only",
+      description: "Show only analog clock",
+    },
+    {
+      id: "digital",
+      name: "Digital Only",
+      description: "Show only digital clock",
+    },
+    {
+      id: "timecircles",
+      name: "Time Circles Only",
+      description: "Show only circle-based clocks",
+    },
   ];
 
   const quickActions = [
-    { href: "/schedule", icon: CalendarDaysIcon, text: "Schedule", color: "from-blue-500 to-cyan-500" },
-    { href: "/goals", icon: TargetIcon, text: "Goals", color: "from-purple-500 to-pink-500" },
-    { href: "/about", icon: ChartBarIcon, text: "Analytics", color: "from-green-500 to-teal-500" }
+    {
+      href: "/schedule",
+      icon: CalendarDaysIcon,
+      text: "Schedule",
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      href: "/goals",
+      icon: TbTarget,
+      text: "Goals",
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      href: "/about",
+      icon: ChartBarIcon,
+      text: "Analytics",
+      color: "from-green-500 to-teal-500",
+    },
   ];
 
   const getThemeClasses = () => {
     switch (theme) {
-      case 'light':
+      case "light":
         return {
-          bg: 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100',
-          text: 'text-gray-900',
-          card: 'bg-white/80 backdrop-blur-md border-gray-200/30',
-          accent: 'text-blue-600'
+          bg: "bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100",
+          text: "text-gray-900",
+          card: "bg-white/80 backdrop-blur-md border-gray-200/30",
+          accent: "text-blue-600",
         };
-      case 'purple':
+      case "purple":
         return {
-          bg: 'bg-gradient-to-br from-purple-900 via-indigo-900 to-pink-900',
-          text: 'text-purple-100',
-          card: 'bg-purple-800/20 backdrop-blur-md border-purple-500/30',
-          accent: 'text-purple-300'
+          bg: "bg-gradient-to-br from-purple-900 via-indigo-900 to-pink-900",
+          text: "text-purple-100",
+          card: "bg-purple-800/20 backdrop-blur-md border-purple-500/30",
+          accent: "text-purple-300",
         };
       default: // dark
         return {
-          bg: 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
-          text: 'text-white',
-          card: 'bg-white/10 backdrop-blur-md border-white/20',
-          accent: 'text-purple-300'
+          bg: "bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900",
+          text: "text-white",
+          card: "bg-white/10 backdrop-blur-md border-white/20",
+          accent: "text-purple-300",
         };
     }
   };
@@ -83,12 +126,55 @@ export default function Home() {
   const themeClasses = getThemeClasses();
 
   return (
-    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-float"></div>
+    // <div
+    //   className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}
+    // >
+    //   {/* Background Elements */}
+    //   <div className="absolute inset-0 overflow-hidden">
+    //     <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+    //     <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+    //     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-float"></div>
+    //   </div>
+
+    <div
+      className={`min-h-screen relative ${themeClasses.bg} pt-20 transition-all duration-500`}
+    >
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div
+          className={`absolute -top-40 -right-40 w-80 h-80 rounded-full filter blur-xl opacity-20 animate-pulse
+        ${
+          theme === "dark"
+            ? "bg-purple-500"
+            : theme === "purple"
+            ? "bg-fuchsia-500"
+            : "bg-blue-400"
+        }
+      `}
+        ></div>
+
+        <div
+          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full filter blur-xl opacity-20 animate-pulse animation-delay-2000
+        ${
+          theme === "dark"
+            ? "bg-blue-500"
+            : theme === "purple"
+            ? "bg-purple-400"
+            : "bg-cyan-400"
+        }
+      `}
+        ></div>
+
+        <div
+          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full filter blur-xl opacity-10 animate-float
+        ${
+          theme === "dark"
+            ? "bg-cyan-500"
+            : theme === "purple"
+            ? "bg-pink-500"
+            : "bg-indigo-400"
+        }
+      `}
+        ></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
@@ -106,15 +192,22 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <div className={`p-3 ${themeClasses.card} rounded-2xl border shadow-lg`}>
+              <div
+                className={`p-3 ${themeClasses.card} rounded-2xl border shadow-lg`}
+              >
                 <ClockIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
-              <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent`}>
+              <h1
+                className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent`}
+              >
                 Clock Schedule
               </h1>
             </motion.div>
-            <p className={`${themeClasses.text} text-lg sm:text-xl max-w-2xl mx-auto opacity-80`}>
-              Master your time with beautiful, interactive clocks and smart scheduling
+            <p
+              className={`${themeClasses.text} text-lg sm:text-xl max-w-2xl mx-auto opacity-80`}
+            >
+              Master your time with beautiful, interactive clocks and smart
+              scheduling
             </p>
           </div>
 
@@ -126,7 +219,9 @@ export default function Home() {
             transition={{ delay: 0.3 }}
           >
             {/* Theme Switcher */}
-            <div className={`${themeClasses.card} rounded-2xl p-2 border shadow-lg`}>
+            <div
+              className={`${themeClasses.card} rounded-2xl p-2 border shadow-lg`}
+            >
               <div className="flex gap-2">
                 {themes.map((themeOption) => (
                   <motion.button
@@ -141,7 +236,9 @@ export default function Home() {
                     whileTap={{ scale: 0.95 }}
                   >
                     <themeOption.icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{themeOption.name}</span>
+                    <span className="text-sm font-medium">
+                      {themeOption.name}
+                    </span>
                   </motion.button>
                 ))}
               </div>
@@ -168,7 +265,9 @@ export default function Home() {
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h3 className={`${themeClasses.text} font-semibold mb-3`}>Choose Clock Display</h3>
+                    <h3 className={`${themeClasses.text} font-semibold mb-3`}>
+                      Choose Clock Display
+                    </h3>
                     <div className="space-y-2">
                       {clockStyles.map((style) => (
                         <motion.button
@@ -179,14 +278,20 @@ export default function Home() {
                           }}
                           className={`w-full text-left p-3 rounded-xl transition-all duration-200 ${
                             clockStyle === style.id
-                              ? 'bg-purple-500/30 border border-purple-500/50'
-                              : 'hover:bg-white/10'
+                              ? "bg-purple-500/30 border border-purple-500/50"
+                              : "hover:bg-white/10"
                           }`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <div className={`font-medium ${themeClasses.text}`}>{style.name}</div>
-                          <div className={`text-sm ${themeClasses.text} opacity-70`}>{style.description}</div>
+                          <div className={`font-medium ${themeClasses.text}`}>
+                            {style.name}
+                          </div>
+                          <div
+                            className={`text-sm ${themeClasses.text} opacity-70`}
+                          >
+                            {style.description}
+                          </div>
                         </motion.button>
                       ))}
                     </div>
@@ -213,83 +318,224 @@ export default function Home() {
 
           {/* Clock Displays */}
           <AnimatePresence mode="wait">
-            {(clockStyle === 'all' || clockStyle === 'digital') && (
-              <motion.div
-                key="clocks-grid"
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-              >
-                {/* Circular Clocks */}
-                {clockStyle === 'all' && (
-                  <motion.div
+            {clockStyle === "all" ? (
+              <>
+                {/* Top Row: Time Circles + Digital side by side */}
+                <motion.div
+                  key="top-row"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-12"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {/* Time Circles */}
+                  <div
                     className={`${themeClasses.card} border rounded-3xl p-8 shadow-xl`}
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
                   >
-                    <h2 className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}>Time Circles</h2>
+                    <h2
+                      className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
+                    >
+                      Time Circles
+                    </h2>
                     <div className="flex flex-wrap justify-center gap-8">
-                      <Circle value={hours} max={is24Hour ? 24 : 12} label="Hours" delay={0} theme={theme} />
-                      <Circle value={minutes} max={60} label="Minutes" delay={0.2} theme={theme} />
-                      <Circle value={seconds} max={60} label="Seconds" delay={0.4} theme={theme} />
+                      <Circle
+                        value={hours}
+                        max={is24Hour ? 24 : 12}
+                        label="Hours"
+                        delay={0}
+                        theme={theme}
+                      />
+                      <Circle
+                        value={minutes}
+                        max={60}
+                        label="Minutes"
+                        delay={0.2}
+                        theme={theme}
+                      />
+                      <Circle
+                        value={seconds}
+                        max={60}
+                        label="Seconds"
+                        delay={0.4}
+                        theme={theme}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Digital Clock */}
+                  <div
+                    className={`${themeClasses.card} border rounded-3xl p-8 flex flex-col justify-center shadow-xl`}
+                  >
+                    <h2
+                      className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
+                    >
+                      Digital Time
+                    </h2>
+                    <div className="text-center">
+                      <motion.div
+                        className={`text-6xl sm:text-7xl font-mono font-bold ${themeClasses.text} mb-4`}
+                        key={`${hours}:${minutes}:${seconds}`}
+                        initial={{ scale: 0.95 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.1 }}
+                      >
+                        {hours.toString().padStart(2, "0")}:
+                        {minutes.toString().padStart(2, "0")}:
+                        {seconds.toString().padStart(2, "0")}
+                      </motion.div>
+                      {!is24Hour && (
+                        <div
+                          className={`text-2xl font-bold ${themeClasses.accent} mb-4`}
+                        >
+                          {ampm}
+                        </div>
+                      )}
+                      <div
+                        className={`text-lg ${themeClasses.text} opacity-80`}
+                      >
+                        {time.toLocaleDateString("en-GB", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Bottom Row: Analog Clock */}
+                <motion.div
+                  key="analog-clock"
+                  className={`${themeClasses.card} border rounded-3xl p-8 shadow-xl mb-12`}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 50 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <h2
+                    className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
+                  >
+                    Analog Clock
+                  </h2>
+                  <div className="flex justify-center">
+                    <AnalogClock time={time} theme={theme} />
+                  </div>
+                </motion.div>
+              </>
+            ) : (
+              <>
+                {/* Single Time Circles */}
+                {clockStyle === "timecircles" && (
+                  <motion.div
+                    key="time-circles"
+                    className={`${themeClasses.card} border rounded-3xl p-8 shadow-xl mb-12`}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 30 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <h2
+                      className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
+                    >
+                      Time Circles
+                    </h2>
+                    <div className="flex flex-wrap justify-center gap-8">
+                      <Circle
+                        value={hours}
+                        max={is24Hour ? 24 : 12}
+                        label="Hours"
+                        delay={0}
+                        theme={theme}
+                      />
+                      <Circle
+                        value={minutes}
+                        max={60}
+                        label="Minutes"
+                        delay={0.2}
+                        theme={theme}
+                      />
+                      <Circle
+                        value={seconds}
+                        max={60}
+                        label="Seconds"
+                        delay={0.4}
+                        theme={theme}
+                      />
                     </div>
                   </motion.div>
                 )}
 
-                {/* Digital Clock */}
-                <motion.div
-                  className={`${themeClasses.card} border rounded-3xl p-8 flex flex-col justify-center shadow-xl ${clockStyle === 'digital' ? 'lg:col-span-2' : ''}`}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <h2 className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}>Digital Time</h2>
-                  <div className="text-center">
-                    <motion.div 
-                      className={`text-6xl sm:text-7xl font-mono font-bold ${themeClasses.text} mb-4`}
-                      key={`${hours}:${minutes}:${seconds}`}
-                      initial={{ scale: 0.95 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.1 }}
+                {/* Single Digital Clock */}
+                {clockStyle === "digital" && (
+                  <motion.div
+                    key="digital-clock"
+                    className={`${themeClasses.card} border rounded-3xl p-8 flex flex-col justify-center shadow-xl mb-12`}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <h2
+                      className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
                     >
-                      {hours.toString().padStart(2, '0')}:
-                      {minutes.toString().padStart(2, '0')}:
-                      {seconds.toString().padStart(2, '0')}
-                    </motion.div>
-                    {!is24Hour && (
-                      <div className={`text-2xl font-bold ${themeClasses.accent} mb-4`}>{ampm}</div>
-                    )}
-                    <div className={`text-lg ${themeClasses.text} opacity-80`}>
-                      {time.toLocaleDateString("en-GB", {
-                        weekday: "long",
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      Digital Time
+                    </h2>
+                    <div className="text-center">
+                      <motion.div
+                        className={`text-6xl sm:text-7xl font-mono font-bold ${themeClasses.text} mb-4`}
+                        key={`${hours}:${minutes}:${seconds}`}
+                        initial={{ scale: 0.95 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.1 }}
+                      >
+                        {hours.toString().padStart(2, "0")}:
+                        {minutes.toString().padStart(2, "0")}:
+                        {seconds.toString().padStart(2, "0")}
+                      </motion.div>
+                      {!is24Hour && (
+                        <div
+                          className={`text-2xl font-bold ${themeClasses.accent} mb-4`}
+                        >
+                          {ampm}
+                        </div>
+                      )}
+                      <div
+                        className={`text-lg ${themeClasses.text} opacity-80`}
+                      >
+                        {time.toLocaleDateString("en-GB", {
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
+                  </motion.div>
+                )}
 
-            {/* Analog Clock */}
-            {(clockStyle === 'all' || clockStyle === 'analog') && (
-              <motion.div
-                key="analog-clock"
-                className={`${themeClasses.card} border rounded-3xl p-8 mb-12 shadow-xl`}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                transition={{ delay: 0.7, duration: 0.5 }}
-              >
-                <h2 className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}>Analog Clock</h2>
-                <div className="flex justify-center">
-                  <AnalogClock time={time} theme={theme} />
-                </div>
-              </motion.div>
+                {/* Single Analog Clock */}
+                {clockStyle === "analog" && (
+                  <motion.div
+                    key="analog-clock"
+                    className={`${themeClasses.card} border rounded-3xl p-8 shadow-xl mb-12`}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 50 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <h2
+                      className={`text-2xl font-bold ${themeClasses.text} mb-8 text-center`}
+                    >
+                      Analog Clock
+                    </h2>
+                    <div className="flex justify-center">
+                      <AnalogClock time={time} theme={theme} />
+                    </div>
+                  </motion.div>
+                )}
+              </>
             )}
           </AnimatePresence>
 
@@ -300,7 +546,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
           >
-            <h2 className={`text-2xl font-bold ${themeClasses.text} mb-8`}>Quick Actions</h2>
+            <h2 className={`text-2xl font-bold ${themeClasses.text} mb-8`}>
+              Quick Actions
+            </h2>
             <div className="flex flex-wrap justify-center gap-4">
               {quickActions.map((action, index) => (
                 <QuickActionButton
@@ -327,23 +575,23 @@ function Circle({ value, max, label, delay, theme }) {
 
   const getThemeColors = () => {
     switch (theme) {
-      case 'light':
+      case "light":
         return {
-          glow: 'from-blue-500 to-purple-600',
-          stroke: 'stroke-blue-500',
-          text: 'text-gray-900'
+          glow: "from-blue-500 to-purple-600",
+          stroke: "stroke-blue-500",
+          text: "text-gray-900",
         };
-      case 'purple':
+      case "purple":
         return {
-          glow: 'from-purple-400 to-pink-500',
-          stroke: 'stroke-purple-400',
-          text: 'text-purple-100'
+          glow: "from-purple-400 to-pink-500",
+          stroke: "stroke-purple-400",
+          text: "text-purple-100",
         };
       default:
         return {
-          glow: 'from-purple-500 to-cyan-400',
-          stroke: 'stroke-purple-500',
-          text: 'text-white'
+          glow: "from-purple-500 to-cyan-400",
+          stroke: "stroke-purple-500",
+          text: "text-white",
         };
     }
   };
@@ -358,7 +606,9 @@ function Circle({ value, max, label, delay, theme }) {
       transition={{ delay, duration: 0.6 }}
     >
       <div className="relative mb-4">
-        <div className={`absolute inset-0 bg-gradient-to-r ${colors.glow} rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300`}></div>
+        <div
+          className={`absolute inset-0 bg-gradient-to-r ${colors.glow} rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300`}
+        ></div>
 
         <svg
           width="140"
@@ -432,130 +682,140 @@ function AnalogClock({ time, theme }) {
   const hours = time.getHours() % 12;
   const minutes = time.getMinutes();
   const seconds = time.getSeconds();
+  const ms = time.getMilliseconds();
 
-  const hourAngle = (hours * 30) + (minutes * 0.5);
-  const minuteAngle = minutes * 6;
-  const secondAngle = seconds * 6;
+  const secondsTotal = seconds + ms / 1000;
+  const secondAngle = secondsTotal * 6;
+  const minutesTotal = minutes + secondsTotal / 60;
+  const minuteAngle = minutesTotal * 6;
+  const hoursTotal = hours + minutesTotal / 60;
+  const hourAngle = hoursTotal * 30;
 
-  const getThemeColors = () => {
-    switch (theme) {
-      case 'light':
-        return {
-          face: 'fill-white stroke-gray-300',
-          markers: 'stroke-gray-600',
-          hourHand: 'stroke-blue-600',
-          minuteHand: 'stroke-purple-600',
-          secondHand: 'stroke-pink-500',
-          center: 'fill-blue-600'
-        };
-      case 'purple':
-        return {
-          face: 'fill-purple-900/50 stroke-purple-400',
-          markers: 'stroke-purple-300',
-          hourHand: 'stroke-purple-300',
-          minuteHand: 'stroke-pink-300',
-          secondHand: 'stroke-cyan-300',
-          center: 'fill-purple-400'
-        };
-      default:
-        return {
-          face: 'fill-white/10 stroke-white/30',
-          markers: 'stroke-white/60',
-          hourHand: 'stroke-purple-400',
-          minuteHand: 'stroke-cyan-400',
-          secondHand: 'stroke-pink-400',
-          center: 'fill-purple-500'
-        };
-    }
-  };
+  // Theme colors
 
-  const colors = getThemeColors();
+  const colors = {
+    dark: {
+      faceFill: "rgba(255,255,255,0.04)",
+      faceStroke: "rgba(255,255,255,0.15)",
+      hourMarker: "rgba(255,255,255,0.6)",
+      minuteMarker: "rgba(255,255,255,0.25)",
+      hourHand: "#8B5CF6",
+      minuteHand: "#06B6D4",
+      secondHand: "#EC4899",
+      center: "#8B5CF6",
+    },
+    light: {
+      faceFill: "rgba(0,0,0,0.02)",
+      faceStroke: "rgba(0,0,0,0.2)",
+      hourMarker: "rgba(0,0,0,0.7)",
+      minuteMarker: "rgba(0,0,0,0.3)",
+      hourHand: "#5B21B6",
+      minuteHand: "#0284C7",
+      secondHand: "#BE185D",
+      center: "#5B21B6",
+    },
+    purple: {
+      faceFill: "rgba(255,255,255,0.04)",
+      faceStroke: "rgba(255,255,255,0.15)",
+      hourMarker: "rgba(255,255,255,0.8)",
+      minuteMarker: "rgba(255,255,255,0.4)",
+      hourHand: "#E9D5FF",
+      minuteHand: "#A78BFA",
+      secondHand: "#F472B6",
+      center: "#E9D5FF",
+    },
+  }[theme || "dark"];
 
   return (
     <div className="relative w-64 h-64">
-      <svg width="256" height="256" viewBox="0 0 256 256" className="absolute inset-0">
+      <svg
+        width="256"
+        height="256"
+        viewBox="0 0 256 256"
+        className="absolute inset-0"
+      >
+        {/* Face */}
         <circle
           cx="128"
           cy="128"
           r="120"
-          className={colors.face}
+          fill={colors.faceFill}
+          stroke={colors.faceStroke}
           strokeWidth="2"
         />
-        
+
+        {/* Hour markers */}
         {[...Array(12)].map((_, i) => (
           <line
             key={i}
             x1="128"
-            y1="20"
+            y1="28"
             x2="128"
-            y2="35"
-            className={colors.markers}
-            strokeWidth="3"
+            y2="42"
+            stroke={colors.hourMarker}
+            strokeWidth={3}
             transform={`rotate(${i * 30} 128 128)`}
           />
         ))}
 
-        {[...Array(60)].map((_, i) => (
-          i % 5 !== 0 && (
-            <line
-              key={i}
-              x1="128"
-              y1="20"
-              x2="128"
-              y2="28"
-              className={colors.markers}
-              strokeWidth="1"
-              transform={`rotate(${i * 6} 128 128)`}
-            />
-          )
-        ))}
+        {/* Minute markers */}
+        {[...Array(60)].map(
+          (_, i) =>
+            i % 5 !== 0 && (
+              <line
+                key={i}
+                x1="128"
+                y1="28"
+                x2="128"
+                y2="34"
+                stroke={colors.minuteMarker}
+                strokeWidth={1}
+                transform={`rotate(${i * 6} 128 128)`}
+              />
+            )
+        )}
 
-        <motion.line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="70"
-          className={colors.hourHand}
-          strokeWidth="6"
-          strokeLinecap="round"
-          transform={`rotate(${hourAngle} 128 128)`}
-          initial={{ rotate: 0 }}
-          animate={{ rotate: hourAngle }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          style={{ transformOrigin: "128px 128px" }}
-        />
+        {/* Hour hand */}
+        <g transform={`rotate(${hourAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="82"
+            stroke={colors.hourHand}
+            strokeWidth={6}
+            strokeLinecap="round"
+          />
+        </g>
 
-        <motion.line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="45"
-          className={colors.minuteHand}
-          strokeWidth="4"
-          strokeLinecap="round"
-          transform={`rotate(${minuteAngle} 128 128)`}
-          initial={{ rotate: 0 }}
-          animate={{ rotate: minuteAngle }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          style={{ transformOrigin: "128px 128px" }}
-        />
+        {/* Minute hand */}
+        <g transform={`rotate(${minuteAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="60"
+            stroke={colors.minuteHand}
+            strokeWidth={4}
+            strokeLinecap="round"
+          />
+        </g>
 
-        <motion.line
-          x1="128"
-          y1="128"
-          x2="128"
-          y2="35"
-          className={colors.secondHand}
-          strokeWidth="2"
-          strokeLinecap="round"
-          transform={`rotate(${secondAngle} 128 128)`}
-          initial={{ rotate: 0 }}
-          animate={{ rotate: secondAngle }}
-          transition={{ duration: 0.1, ease: "easeInOut" }}
-          style={{ transformOrigin: "128px 128px" }}
-        />
+        {/* Second hand */}
+        <g transform={`rotate(${secondAngle} 128 128)`}>
+          <line
+            x1="128"
+            y1="128"
+            x2="128"
+            y2="48"
+            stroke={colors.secondHand}
+            strokeWidth={2}
+            strokeLinecap="round"
+          />
+        </g>
 
-        <circle cx="128" cy="128" r="8" className={colors.center} />
+        {/* Center */}
+        <circle cx="128" cy="128" r="6" fill={colors.center} />
       </svg>
     </div>
   );
