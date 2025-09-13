@@ -15,7 +15,7 @@ import {
 import "react-toastify/dist/ReactToastify.css";
 
 function Schedule() {
-  const [schedule, setSchedule] = useState([]);
+  const [schedule, setschedule] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newTask, setNewTask] = useState("");
@@ -26,11 +26,12 @@ function Schedule() {
   const [endMinute, setEndMinute] = useState("00");
   const [endPeriod, setEndPeriod] = useState("AM");
   const { themeClasses } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const savedSchedule = localStorage.getItem("schedule");
     if (savedSchedule) {
-      setSchedule(JSON.parse(savedSchedule));
+      setschedule(JSON.parse(savedSchedule));
     }
   }, []);
 
@@ -46,7 +47,7 @@ function Schedule() {
     const token = localStorage.getItem("jwt");
     if (!token) {
       toast.error("You need to log in first.");
-      setSchedule([]);
+      setschedule([]);
       return;
     }
 
@@ -67,7 +68,7 @@ function Schedule() {
       const fetchedSchedule = Array.isArray(response.data.schedule)
         ? response.data.schedule
         : [];
-      setSchedule(fetchedSchedule);
+      setschedule(fetchedSchedule);
       localStorage.setItem("schedule", JSON.stringify(fetchedSchedule));
     } catch (error) {
       console.error("Failed to fetch schedule:", error);
@@ -145,7 +146,7 @@ function Schedule() {
       );
 
       const newSchedule = response.data.schedule || response.data;
-      setSchedule((prev) => [...prev, newSchedule]);
+      setschedule((prev) => [...prev, newSchedule]);
       resetForm();
       setError(null);
       toast.success("Schedule created successfully!");
@@ -164,7 +165,7 @@ function Schedule() {
     try {
       const updatedCompletionStatus = !taskToUpdate.completed;
 
-      setSchedule((prev) =>
+      setschedule((prev) =>
         prev.map((s) =>
           s._id === taskId ? { ...s, completed: updatedCompletionStatus } : s
         )
@@ -199,7 +200,7 @@ function Schedule() {
         }
       );
 
-      setSchedule((prev) => prev.filter((item) => item._id !== id));
+      setschedule((prev) => prev.filter((item) => item._id !== id));
       toast.success("Schedule deleted successfully!");
       await fetchSchedule();
     } catch (error) {
@@ -259,9 +260,18 @@ function Schedule() {
   return (
     <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
       {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
+        <div className="absolute inset-0 overflow-hidden">
+        {/* Top Right Blob */}
+        <div
+          className={`absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse 
+        ${themeClasses.blob1}`}
+        ></div>
+
+        {/* Bottom Left Blob */}
+        <div
+          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000
+        ${themeClasses.blob2}`}
+        ></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
@@ -322,114 +332,113 @@ function Schedule() {
               </div>
 
               {/* Time Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Start Time */}
-                <div>
-                  <label className="form-label">
-                    Start Time
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={startHour}
-                      onChange={(e) => setStartHour(e.target.value)}
-                      className="form-input flex-1"
-                    >
-                      {Array.from({ length: 12 }, (_, i) => i + 1).map(
-                        (hour) => (
-                          <option
-                            key={hour}
-                            value={hour}
-                            className="bg-gray-800"
-                          >
-                            {hour}
-                          </option>
-                        )
-                      )}
-                    </select>
-                    <select
-                      value={startMinute}
-                      onChange={(e) => setStartMinute(e.target.value)}
-                      className="form-input flex-1"
-                    >
-                      {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
-                        <option
-                          key={minute}
-                          value={minute.toString().padStart(2, "0")}
-                          className="bg-gray-800"
-                        >
-                          {minute.toString().padStart(2, "0")}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={startPeriod}
-                      onChange={(e) => setStartPeriod(e.target.value)}
-                      className="form-input"
-                    >
-                      <option value="AM" className="bg-gray-800">
-                        AM
-                      </option>
-                      <option value="PM" className="bg-gray-800">
-                        PM
-                      </option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* End Time */}
-                <div>
-                  <label className="form-label">
-                    End Time
-                  </label>
-                  <div className="flex gap-2">
-                    <select
-                      value={endHour}
-                      onChange={(e) => setEndHour(e.target.value)}
-                      className="form-input flex-1"
-                    >
-                      {Array.from({ length: 12 }, (_, i) => i + 1).map(
-                        (hour) => (
-                          <option
-                            key={hour}
-                            value={hour}
-                            className="bg-gray-800"
-                          >
-                            {hour}
-                          </option>
-                        )
-                      )}
-                    </select>
-                    <select
-                      value={endMinute}
-                      onChange={(e) => setEndMinute(e.target.value)}
-                      className="form-input flex-1"
-                    >
-                      {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
-                        <option
-                          key={minute}
-                          value={minute.toString().padStart(2, "0")}
-                          className="bg-gray-800"
-                        >
-                          {minute.toString().padStart(2, "0")}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={endPeriod}
-                      onChange={(e) => setEndPeriod(e.target.value)}
-                      className="form-input"
-                    >
-                      <option value="AM" className="bg-gray-800">
-                        AM
-                      </option>
-                      <option value="PM" className="bg-gray-800">
-                        PM
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   {/* Start Time */}
+                   <div>
+                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                       Start Time
+                     </label>
+                     <div className="flex gap-2">
+                       <select
+                         value={startHour}
+                         onChange={(e) => setStartHour(e.target.value)}
+                         className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                           (hour) => (
+                             <option
+                               key={hour}
+                               value={hour}
+                               className="bg-gray-800"
+                             >
+                               {hour}
+                             </option>
+                           )
+                         )}
+                       </select>
+                       <select
+                         value={startMinute}
+                         onChange={(e) => setStartMinute(e.target.value)}
+                         className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
+                           <option
+                             key={minute}
+                             value={minute.toString().padStart(2, "0")}
+                             className="bg-gray-800"
+                           >
+                             {minute.toString().padStart(2, "0")}
+                           </option>
+                         ))}
+                       </select>
+                       <select
+                         value={startPeriod}
+                         onChange={(e) => setStartPeriod(e.target.value)}
+                         className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         <option value="AM" className="bg-gray-800">
+                           AM
+                         </option>
+                         <option value="PM" className="bg-gray-800">
+                           PM
+                         </option>
+                       </select>
+                     </div>
+                   </div>
+   
+                   {/* End Time */}
+                   <div>
+                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                       End Time
+                     </label>
+                     <div className="flex gap-2">
+                       <select
+                         value={endHour}
+                         onChange={(e) => setEndHour(e.target.value)}
+                         className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                           (hour) => (
+                             <option
+                               key={hour}
+                               value={hour}
+                               className="bg-gray-800"
+                             >
+                               {hour}
+                             </option>
+                           )
+                         )}
+                       </select>
+                       <select
+                         value={endMinute}
+                         onChange={(e) => setEndMinute(e.target.value)}
+                         className="flex-1 px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         {Array.from({ length: 60 }, (_, i) => i).map((minute) => (
+                           <option
+                             key={minute}
+                             value={minute.toString().padStart(2, "0")}
+                             className="bg-gray-800"
+                           >
+                             {minute.toString().padStart(2, "0")}
+                           </option>
+                         ))}
+                       </select>
+                       <select
+                         value={endPeriod}
+                         onChange={(e) => setEndPeriod(e.target.value)}
+                         className="px-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                       >
+                         <option value="AM" className="bg-gray-800">
+                           AM
+                         </option>
+                         <option value="PM" className="bg-gray-800">
+                           PM
+                         </option>
+                       </select>
+                     </div>
+                   </div>
+                 </div>
               {/* Error Message */}
               {error && (
                 <motion.div

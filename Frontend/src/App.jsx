@@ -14,7 +14,7 @@ import { Toaster } from "react-hot-toast";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import Dayschedule from "./pages/Dayschedule.jsx";
 import Hourschedule from "./pages/Hourschedule.jsx";
-import ForgotPassword from "./pages/Forgetpassword.jsx";
+import ForgotPassword from "./pages/forgetpassword.jsx";
 import VerifyCode from "./pages/VerifyCode.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import { AnimatePresence } from "framer-motion";
