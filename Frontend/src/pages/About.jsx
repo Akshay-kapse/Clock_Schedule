@@ -18,7 +18,8 @@ import { motion } from "framer-motion";
 
 const AboutPage = () => {
   // const { themeClasses } = useTheme();
-const { theme, themeClasses } = useTheme();
+  const { theme, themeClasses } = useTheme();
+
 
   const features = [
     {
@@ -100,19 +101,19 @@ const { theme, themeClasses } = useTheme();
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
       </div> */}
-       <div className="absolute inset-0 overflow-hidden">
-    {/* Top Right Blob */}
-    <div
-      className={`absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse 
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Top Right Blob */}
+        <div
+          className={`absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse 
         ${themeClasses.blob1}`}
-    ></div>
+        ></div>
 
-    {/* Bottom Left Blob */}
-    <div
-      className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000
+        {/* Bottom Left Blob */}
+        <div
+          className={`absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000
         ${themeClasses.blob2}`}
-    ></div>
-</div>
+        ></div>
+      </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
@@ -242,7 +243,7 @@ const { theme, themeClasses } = useTheme();
                       }`}
                       initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                       whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
+                      viewport={{ once: false, amount: 0.2 }}
                       transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
                     >
                       <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center z-10">
@@ -289,17 +290,22 @@ const { theme, themeClasses } = useTheme();
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1 }} // 👈 pop out effect
                   >
                     {tech.isComponent ? (
-                      <tech.logo
-                        className={`w-12 h-12 mb-3 ${themeClasses.text}`}
-                      />
+                      <motion.div
+                        whileHover={{ scale: 1.2, filter: "brightness(1.2)" }} // 👈 logo highlight
+                      >
+                        <tech.logo
+                          className={`w-12 h-12 mb-3 ${themeClasses.text}`}
+                        />
+                      </motion.div>
                     ) : (
-                      <img
+                      <motion.img
                         src={tech.logo}
                         alt={tech.name}
                         className="w-12 h-12 mb-3 filter brightness-0 invert"
+                        whileHover={{ scale: 1, filter: "brightness(1.2)" }} // 👈 image highlight
                       />
                     )}
                     <p className={`${themeClasses.text} font-medium text-sm`}>

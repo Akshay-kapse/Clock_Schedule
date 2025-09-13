@@ -3,21 +3,22 @@ import Home from "../src/components/Home.jsx";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext.jsx";
 import PageTransition from "./components/PageTransition.jsx";
-
-import Schedule from "../src/pages/Schedule.jsx";
-import Goals from "../src/pages/Goals.jsx";
+import { Toaster } from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
 import About from "../src/pages/About.jsx";
 import Contact from "../src/pages/Contact.jsx";
-import Login from "../src/pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import { Toaster } from "react-hot-toast";
-import PageNotFound from "./pages/PageNotFound.jsx";
-import Dayschedule from "./pages/Dayschedule.jsx";
-import Hourschedule from "./pages/Hourschedule.jsx";
+import Dayschedule from "../src/pages/Dayschedule.jsx";
 import ForgotPassword from "./pages/forgetpassword.jsx";
-import VerifyCode from "./pages/VerifyCode.jsx";
-import ResetPassword from "./pages/ResetPassword.jsx";
-import { AnimatePresence } from "framer-motion";
+import Goals from "./pages/Goals.jsx";
+import Hourschedule from "./pages/Hourschedule.jsx";
+import Login from "./pages/Login.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
+import Register from "./pages/Register.jsx";
+import ResetPassword from "./pages/resetpassword.jsx";
+import Schedule from "../src/pages/Schedule.jsx";
+import VerifyCode from "./pages/verifycode.jsx";
+
+
 // import { Analytics } from "@vercel/analytics/react";
 
 function App() {

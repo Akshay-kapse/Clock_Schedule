@@ -14,7 +14,8 @@ import {
 } from "@heroicons/react/24/outline";
 import "react-toastify/dist/ReactToastify.css";
 
-const ContactPage = () => {
+
+   const ContactPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -27,7 +28,7 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { themeClasses } = useTheme();
 
-  const handleChange = (e) => {
+ const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -35,55 +36,51 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    const submitData = {
-      fullName: formData.fullName,
-      email: formData.email,
-      phoneNumber: formData.phone,
-      location: formData.location,
-      expertise: formData.expertise,
-      projectDetails: formData.message,
-    };
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: import.meta.env.VITE_WEB3FORM_KEY, // ✅ put your key in .env
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.location,
+        expertise: formData.expertise,
+        message: formData.message,
+      }),
+    });
 
-    try {
-      const response = await fetch(
-        "http://localhost:4001/api/contact/submit-contact",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(submitData),
-        }
-      );
+    const result = await response.json();
 
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("Message sent successfully! We'll get back to you soon.");
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          location: "",
-          expertise: "",
-          message: "",
-        });
-      } else {
-        toast.error(
-          result.message || "Failed to send message. Please try again."
-        );
-      }
-    } catch (error) {
-      console.error("Error submitting contact form:", error);
-      toast.error("Network error. Please check your connection and try again.");
-    } finally {
-      setIsSubmitting(false);
+    if (result.success) {
+      toast.success("Message sent successfully! We'll get back to you soon.");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        location: "",
+        expertise: "",
+        message: "",
+      });
+    } else {
+      toast.error(result.message || "Failed to send message. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Error submitting contact form:", error);
+    toast.error("Network error. Please check your connection and try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const contactInfo = [
     {
