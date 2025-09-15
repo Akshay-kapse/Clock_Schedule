@@ -29,7 +29,7 @@ const VerifyCode = () => {
     try {
       console.log("Verifying code with email:", email, "and code:", code);
       const res = await axios.post(
-        "http://localhost:4001/api/userpassword/verify-code",
+        `${import.meta.env.VITE_BACKEND_URL}/api/userpassword/verify-code`,
         {
           email: email.trim(),
           code: code.trim(),
