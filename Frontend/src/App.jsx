@@ -17,6 +17,7 @@ import Register from "./pages/Register.jsx";
 import ResetPassword from "./pages/resetpassword.jsx";
 import Schedule from "../src/pages/Schedule.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const location = useLocation();
@@ -78,6 +79,7 @@ function App() {
 
         <Toaster />
       </div>
+      <Analytics />
     </ThemeProvider>
   );
 }
