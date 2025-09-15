@@ -13,6 +13,9 @@ import dayRoute from "./routes/day.route.js";
 import contact from "./routes/contact.route.js";
 import forgotPassword from "./routes/forpassword.route.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
 
 const app = express();
 dotenv.config();
@@ -32,7 +35,8 @@ app.use(
 
 const allowedOrigins = [
   "http://localhost:5173",
-  /\.vercel\.app$/, // ✅ any vercel subdomain
+  "https://right-ochre.vercel.app", 
+  /\.vercel\.app$/,
 ];
 
 app.use(
@@ -85,6 +89,21 @@ app.use("/api/dayschedule", dayRoute);
 app.use("/api/contact", contact);
 
 app.use("/api/userpassword", forgotPassword);
+
+
+
+// Fix for __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve frontend dist folder
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
+
+// Catch-all route: send index.html for React Router
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../Frontend/dist", "index.html"));
+});
+
 
 
 app.listen(PORT, () => {

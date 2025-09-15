@@ -42,7 +42,8 @@ function App() {
 
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Navigate to="/home" />} />
+            {/* <Route path="/" element={<Navigate to="/home" />} /> */}
+              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
             <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
             <Route path="/forget-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
