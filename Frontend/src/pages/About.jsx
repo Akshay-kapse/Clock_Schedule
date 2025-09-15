@@ -82,6 +82,10 @@ const AboutPage = () => {
       icon: CheckCircleIcon,
     },
   ];
+  const yearGradient =
+  theme === "light"
+    ? "bg-gradient-to-r from-purple-600 to-blue-600"
+    : "bg-gradient-to-r from-purple-300 to-blue-300";
 
   const technologies = [
     { name: "React", logo: FaReact, isComponent: true },
@@ -96,11 +100,7 @@ const AboutPage = () => {
     <div
       className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}
     >
-      {/* Background Gradient Circles */}
-      {/* <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-      </div> */}
+     
       <div className="absolute inset-0 overflow-hidden">
         {/* Top Right Blob */}
         <div
@@ -136,8 +136,11 @@ const AboutPage = () => {
               >
                 <LightBulbIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
-                About ClockSchedule
+              
+               <h1
+                className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent`}
+              >
+                 About ClockSchedule
               </h1>
             </motion.div>
             <motion.p
@@ -221,7 +224,7 @@ const AboutPage = () => {
           </ScrollAnimation>
 
           {/* Timeline */}
-          <ScrollAnimation>
+          {/* <ScrollAnimation>
             <motion.div
               className="mb-16"
               initial={{ opacity: 0, y: 50 }}
@@ -269,7 +272,68 @@ const AboutPage = () => {
                 </div>
               </div>
             </motion.div>
-          </ScrollAnimation>
+          </ScrollAnimation> */}
+
+           <ScrollAnimation>
+      <motion.div
+        className="mb-16"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <h2 className={`text-3xl font-bold text-center mb-12 ${themeClasses.text}`}>
+          Our Journey
+        </h2>
+        <div className="relative">
+          <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-purple-500 to-blue-500"></div>
+          <div className="space-y-12">
+            {timeline.map((item, index) => (
+              <motion.div
+                key={item.year}
+                className={`relative flex items-center ${
+                  index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                }`}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+              >
+                {/* Timeline dot */}
+                <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center z-10">
+                  <item.icon className="w-4 h-4 text-white" />
+                </div>
+
+                {/* Card */}
+                <div
+                  className={`rounded-2xl p-6 ml-16 md:ml-0 ${
+                    index % 2 === 0 ? "md:mr-8" : "md:ml-8"
+                  } md:w-5/12 ${themeClasses.card}`}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    {/* <span className="text-2xl font-bold bg-gradient-to-r from-purple-300 to-blue-500 bg-clip-text text-transparent">
+                      {item.year}
+                    </span> */}
+                    <span
+  className={`text-2xl font-bold bg-clip-text text-transparent ${yearGradient}`}
+>
+  {item.year}
+</span>
+
+                  </div>
+                  <h3 className={`text-xl font-semibold mb-2 ${themeClasses.text}`}>
+                    {item.title}
+                  </h3>
+                  <p className={`${themeClasses.textSecondary}`}>
+                    {item.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </ScrollAnimation>
 
           {/* Technologies */}
           <ScrollAnimation>

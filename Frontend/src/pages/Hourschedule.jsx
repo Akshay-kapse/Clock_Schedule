@@ -277,7 +277,7 @@ function Schedule() {
 
   return (
     <div
-      className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}
+      className={`min-h-screen ${themeClasses.bg} transition-all duration-500`}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -326,7 +326,7 @@ function Schedule() {
                 >
                   <ClockIcon className={`w-8 h-8 ${themeClasses.accent}`} />
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
                   Hour Schedule
                 </h1>
               </motion.div>

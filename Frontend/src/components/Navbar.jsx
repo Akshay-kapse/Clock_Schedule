@@ -84,7 +84,7 @@ const Navbar = () => {
             </div>
             <Link to="/home" className="text-xl lg:text-2xl font-bold">
               <span className={themeClasses.text}>Clock</span>
-              <span className="bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-300 to-blue-400 bg-clip-text text-transparent">
                 Schedule
               </span>
             </Link>

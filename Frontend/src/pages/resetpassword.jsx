@@ -102,7 +102,7 @@ const ResetPassword = () => {
               </div>
               <h1 className="text-3xl font-bold">
                 <span className="text-white">Clock</span>
-                <span className="bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
                   Schedule
                 </span>
               </h1>

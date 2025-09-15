@@ -153,7 +153,7 @@ const handleSubmit = async (e) => {
                 <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
                   <PhoneIcon className="w-8 h-8 text-purple-300" />
                 </div>
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
                   Get In Touch
                 </h1>
               </motion.div>

@@ -174,7 +174,7 @@ export default function Home() {
                 <ClockIcon className={`w-8 h-8 ${themeClasses.accent}`} />
               </div>
               <h1
-                className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent`}
+                className={`text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent`}
               >
                 Clock Schedule
               </h1>
@@ -219,58 +219,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Clock Style Selector */}
-            {/* <div className="relative">
-              <motion.button
-                onClick={() => setShowClockSettings(!showClockSettings)}
-                className={`flex items-center rounded-2xl gap-2 px-6 py-3 ${themeClasses.card} border ${themeClasses.text} hover:bg-white/10 transition-all duration-300`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Cog6ToothIcon className="w-4 h-4" />
-                <span className="text-sm font-medium">Clock Style</span>
-              </motion.button>
-
-              <AnimatePresence>
-                {showClockSettings && (
-                  <motion.div
-                    className={`absolute top-full mt-2 right-0 ${themeClasses.card} border ${themeClasses.text} rounded-2xl p-4 shadow-lg z-50 min-w-64`}
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <h3 className={`font-semibold mb-3 ${themeClasses.text}`}>
-                      Choose Clock Display
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                      {clockStyles.map((style) => (
-                        <motion.button
-                          key={style.id}
-                          onClick={() => {
-                            setClockStyle(style.id);
-                            setShowClockSettings(false);
-                          }}
-                          className={`w-full text-left px-4 py-3 rounded-2xl border transition-all duration-200 font-medium ${
-                            clockStyle === style.id
-                              ? `bg-purple-500/30 border-purple-500 ${themeClasses.text}`
-                              : `hover:bg-white/10 ${themeClasses.text} border-transparent`
-                          }`}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div>{style.name}</div>
-                          <div className="text-sm opacity-70">
-                            {style.description}
-                          </div>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div> */}
-
+          
             <div className="relative" ref={clockSettingsRef}>
               <motion.button
                 onClick={() => setShowClockSettings(!showClockSettings)}

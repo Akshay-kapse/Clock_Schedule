@@ -55,7 +55,7 @@ export const ThemeProvider = ({ children, applyTheme = true }) => {
           bg: "bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100",
           bgSecondary: "bg-white/90",
           text: "text-gray-900",
-          textSecondary: "text-gray-600",
+          textSecondary: "text-gray-900",
           card: "bg-white/80 backdrop-blur-md border-gray-200/30",
           cardHover: "hover:bg-white/90",
           accent: "text-blue-600",

@@ -207,7 +207,7 @@ function Schedule() {
   const formatDate = (date) => new Date(date).toLocaleDateString();
 
   return (
-    <div className={`min-h-screen ${themeClasses.bg} pt-20 transition-all duration-500`}>
+    <div className={`min-h-screen ${themeClasses.bg} transition-all duration-500`}>
       {/* Background Elements */}
        <div className="absolute inset-0 overflow-hidden">
         {/* Top Right Blob */}
@@ -250,10 +250,10 @@ function Schedule() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
+                <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg mb-4`}>
                   <CalendarDaysIcon className={`w-8 h-8 ${themeClasses.accent}`} />
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 mb-4 py-4 bg-clip-text text-transparent">
                   Day Schedule
                 </h1>
               </motion.div>

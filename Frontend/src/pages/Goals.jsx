@@ -310,7 +310,7 @@ const GoalPage = () => {
                   <div className={`p-3 ${themeClasses.glass} rounded-2xl border shadow-lg`}>
                     <TbTarget className={`w-8 h-8 ${themeClasses.accent}`} />
                   </div>
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-300 to-blue-300 bg-clip-text text-transparent">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
                     Your Goals
                   </h1>
                 </motion.div>
