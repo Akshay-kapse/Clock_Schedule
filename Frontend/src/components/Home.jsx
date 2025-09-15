@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 import {
@@ -18,6 +18,7 @@ export default function Home() {
   const [clockStyle, setClockStyle] = useState("all"); // 'all', 'analog', 'digital'
   const [showClockSettings, setShowClockSettings] = useState(false);
   const { theme, setTheme, themeClasses } = useTheme();
+  const clockSettingsRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,6 +26,22 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        clockSettingsRef.current &&
+        !clockSettingsRef.current.contains(event.target)
+      ) {
+        setShowClockSettings(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [clockSettingsRef]);
 
   const toggleFormat = () => setIs24Hour((prev) => !prev);
 
@@ -170,9 +187,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Theme & Clock Controls */}
           <motion.div
-            className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8"
+            className="flex justify-center items-center gap-4 mb-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -204,10 +220,10 @@ export default function Home() {
             </div>
 
             {/* Clock Style Selector */}
-            <div className="relative">
+            {/* <div className="relative">
               <motion.button
                 onClick={() => setShowClockSettings(!showClockSettings)}
-                className={`flex items-center gap-2 px-4 py-2 ${themeClasses.card} border rounded-xl ${themeClasses.text} hover:bg-white/10 transition-all duration-300`}
+                className={`flex items-center rounded-2xl gap-2 px-6 py-3 ${themeClasses.card} border ${themeClasses.text} hover:bg-white/10 transition-all duration-300`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -218,16 +234,16 @@ export default function Home() {
               <AnimatePresence>
                 {showClockSettings && (
                   <motion.div
-                    className={`absolute top-full mt-2 right-0 ${themeClasses.card} border rounded-2xl p-4 shadow-xl z-50 min-w-64`}
+                    className={`absolute top-full mt-2 right-0 ${themeClasses.card} border ${themeClasses.text} rounded-2xl p-4 shadow-lg z-50 min-w-64`}
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h3 className={`${themeClasses.text} font-semibold mb-3`}>
+                    <h3 className={`font-semibold mb-3 ${themeClasses.text}`}>
                       Choose Clock Display
                     </h3>
-                    <div className="space-y-2">
+                    <div className="flex flex-col gap-2">
                       {clockStyles.map((style) => (
                         <motion.button
                           key={style.id}
@@ -235,20 +251,67 @@ export default function Home() {
                             setClockStyle(style.id);
                             setShowClockSettings(false);
                           }}
-                          className={`w-full text-left p-3 rounded-xl transition-all duration-200 ${
+                          className={`w-full text-left px-4 py-3 rounded-2xl border transition-all duration-200 font-medium ${
                             clockStyle === style.id
-                              ? "bg-purple-500/30 border border-purple-500/50"
-                              : "hover:bg-white/10"
+                              ? `bg-purple-500/30 border-purple-500 ${themeClasses.text}`
+                              : `hover:bg-white/10 ${themeClasses.text} border-transparent`
                           }`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <div className={`font-medium ${themeClasses.text}`}>
-                            {style.name}
+                          <div>{style.name}</div>
+                          <div className="text-sm opacity-70">
+                            {style.description}
                           </div>
-                          <div
-                            className={`text-sm ${themeClasses.text} opacity-70`}
-                          >
+                        </motion.button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div> */}
+
+            <div className="relative" ref={clockSettingsRef}>
+              <motion.button
+                onClick={() => setShowClockSettings(!showClockSettings)}
+                className={`flex items-center rounded-2xl gap-2 px-6 py-3 ${themeClasses.card} border ${themeClasses.text} hover:bg-white/10 transition-all duration-300`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Cog6ToothIcon className="w-4 h-4" />
+                <span className="text-sm font-medium">Clock Style</span>
+              </motion.button>
+
+              <AnimatePresence>
+                {showClockSettings && (
+                  <motion.div
+                    className={`absolute top-full mt-2 right-0 ${themeClasses.card} border ${themeClasses.text} rounded-2xl p-4 shadow-lg z-50 min-w-64`}
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <h3 className={`font-semibold mb-3 ${themeClasses.text}`}>
+                      Choose Clock Display
+                    </h3>
+                    <div className="flex flex-col gap-2">
+                      {clockStyles.map((style) => (
+                        <motion.button
+                          key={style.id}
+                          onClick={() => {
+                            setClockStyle(style.id);
+                            setShowClockSettings(false);
+                          }}
+                          className={`w-full text-left px-4 py-3 rounded-2xl border transition-all duration-200 font-medium ${
+                            clockStyle === style.id
+                              ? `bg-purple-500/30 border-purple-500 ${themeClasses.text}`
+                              : `hover:bg-white/10 ${themeClasses.text} border-transparent`
+                          }`}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <div>{style.name}</div>
+                          <div className="text-sm opacity-70">
                             {style.description}
                           </div>
                         </motion.button>

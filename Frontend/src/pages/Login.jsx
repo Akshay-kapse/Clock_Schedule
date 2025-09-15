@@ -52,7 +52,7 @@ const Login = () => {
 
       setEmail("");
       setPassword("");
-      navigateTo("/");
+      navigateTo("/home");
     } catch (error) {
       console.error("Login Error:", error);
       toast.error(

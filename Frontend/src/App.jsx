@@ -18,12 +18,10 @@ import ResetPassword from "./pages/resetpassword.jsx";
 import Schedule from "../src/pages/Schedule.jsx";
 import VerifyCode from "./pages/verifycode.jsx";
 
-
-// import { Analytics } from "@vercel/analytics/react";
-
 function App() {
-  // Hide navbar for specific routes
   const location = useLocation();
+
+  // Routes where navbar should not show
   const hideNavBar =
     [
       "/register",
@@ -33,35 +31,52 @@ function App() {
       "/verify-code",
       "/reset-password",
     ].includes(location.pathname) ||
-    location.pathname.match(/^\/goalschedule\/[^/]+\/(day|hour)$/);
+    !!location.pathname.match(/^\/goalschedule\/[^/]+\/(day|hour)$/);
+
+  // Routes where we DO NOT want to apply the theme (visual neutral pages)
+  const noThemeRoutes = [
+    "/login",
+    "/register",
+    "/forget-password",
+    "/verify-code",
+    "/reset-password",
+  ];
+  const disableTheme = noThemeRoutes.includes(location.pathname);
 
   return (
-    <ThemeProvider>
+    // Pass applyTheme = true for normal pages, false for login/register pages
+    <ThemeProvider applyTheme={!disableTheme}>
+      {/* you can still use a wrapper class if you want */}
       <div>
         {!hideNavBar && <Navbar />}
 
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
-            {/* <Route path="/" element={<Navigate to="/home" />} /> */}
-              <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+            <Route path="/" element={<Navigate to="/home" />} />
+
+            {/* Auth / no-theme pages */}
             <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
             <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
             <Route path="/forget-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
             <Route path="/verify-code" element={<PageTransition><VerifyCode /></PageTransition>} />
             <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
+
+            {/* Themed pages */}
             <Route path="/home" element={<PageTransition><Home /></PageTransition>} />
             <Route path="/schedule" element={<PageTransition><Schedule /></PageTransition>} />
             <Route path="/goals" element={<PageTransition><Goals /></PageTransition>} />
             <Route path="/about" element={<PageTransition><About /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+
+            {/* Dynamic schedule pages */}
             <Route path="/goalschedule/:goalId/day" element={<PageTransition><Dayschedule /></PageTransition>} />
             <Route path="/goalschedule/:goalId/hour" element={<PageTransition><Hourschedule /></PageTransition>} />
+
             <Route path="*" element={<PageTransition><PageNotFound /></PageTransition>} />
           </Routes>
         </AnimatePresence>
 
         <Toaster />
-        {/* <Analytics /> */}
       </div>
     </ThemeProvider>
   );
