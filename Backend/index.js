@@ -13,10 +13,6 @@ import dayRoute from "./routes/day.route.js";
 import contact from "./routes/contact.route.js";
 import forgotPassword from "./routes/forpassword.route.js";
 
-import path from "path";
-import { fileURLToPath } from "url";
-
-
 const app = express();
 dotenv.config();
 
@@ -26,7 +22,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: /^http:\/\/localhost:\d+$/ ,
+    origin: "https://right-ochre.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"], // add other headers you want to allow here
@@ -89,21 +85,6 @@ app.use("/api/dayschedule", dayRoute);
 app.use("/api/contact", contact);
 
 app.use("/api/userpassword", forgotPassword);
-
-
-
-// Fix for __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Serve frontend dist folder
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-
-// Catch-all route: send index.html for React Router
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../Frontend/dist", "index.html"));
-});
-
 
 
 app.listen(PORT, () => {
